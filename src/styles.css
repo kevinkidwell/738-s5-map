@@ -118,6 +118,19 @@ main {
   color: #ffffff;
 }
 
+.bottom-nav .btn-light:hover,
+.bottom-nav .btn-light:focus {
+  /* swap to subtle style on hover/focus */
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text);
+}
+
+.bottom-nav .btn-primary-subtle.active {
+  /* ensure active stays subtle */
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text);
+}
+
 /* Icon spacing */
 .bottom-nav .nav-link .fa-solid {
   margin-right: 0.5rem;
