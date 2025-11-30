@@ -66,12 +66,13 @@ function AppShell() {
 
       <main id="main-content" role="main">
         <Routes>
-          <Route path="/" element={<Navigate to="/alliances" />} />
+          {/*<Route path="/" element={<Navigate to="/map" />} />
           <Route path="/alliances" element={<AlliancesPage dataSource="live" />} />
           <Route path="/dates" element={<SeasonTimeline dataSource="live" />} />
           <Route path="/map" element={<MapPage dataSource="live" />} />
           <Route path="/calculations" element={<CalculationsPage dataSource="live" />} />
-          <Route path="/public" element={<PublicSnapshot />} />
+          <Route path="/public" element={<PublicSnapshot />} />*/}
+        <Route path="/" element={<h1>Hello world</h1>} />
         </Routes>
       </main>
 
