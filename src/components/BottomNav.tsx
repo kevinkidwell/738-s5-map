@@ -1,22 +1,52 @@
+// src/components/BottomNav.tsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import classNames from 'classnames';
+import './BottomNav.css';
 
-export default function BottomNav() {
+const BottomNav: React.FC = () => {
   return (
-    <div className="tabs">
-      <NavLink to="/map" className={({ isActive }) => classNames('tab', { active: isActive })}>
-        🗺️ Map
+    <nav className="bottom-nav nav nav-tabs">
+      <NavLink
+        to="/alliances"
+        className={({ isActive }) =>
+          `nav-item nav-link flex-fill text-center ${isActive ? 'active' : ''}`
+        }
+      >
+        <i className="fa-solid fa-users me-2" aria-hidden="true"></i>
+        <span>Alliances</span>
       </NavLink>
-      <NavLink to="/alliances" className={({ isActive }) => classNames('tab', { active: isActive })}>
-        🎨 Alliances
+
+      <NavLink
+        to="/dates"
+        className={({ isActive }) =>
+          `nav-item nav-link flex-fill text-center ${isActive ? 'active' : ''}`
+        }
+      >
+        <i className="fa-solid fa-calendar-days me-2" aria-hidden="true"></i>
+        <span>Dates</span>
       </NavLink>
-      <NavLink to="/dates" className={({ isActive }) => classNames('tab', { active: isActive })}>
-        📅 Dates
+
+      <NavLink
+        to="/map"
+        className={({ isActive }) =>
+          `nav-item nav-link flex-fill text-center ${isActive ? 'active' : ''}`
+        }
+      >
+        <i className="fa-solid fa-map-location-dot me-2" aria-hidden="true"></i>
+        <span>Map</span>
       </NavLink>
-      <NavLink to="/calculations" className={({ isActive }) => classNames('tab', { active: isActive })}>
-        📊 Calculations
+
+      <NavLink
+        to="/calculations"
+        className={({ isActive }) =>
+          `nav-item nav-link flex-fill text-center ${isActive ? 'active' : ''}`
+        }
+      >
+        <i className="fa-solid fa-calculator me-2" aria-hidden="true"></i>
+        <span>Calculations</span>
       </NavLink>
-    </div>
+    </nav>
   );
-}
+};
+
+export default BottomNav;

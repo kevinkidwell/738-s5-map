@@ -17,25 +17,23 @@ const PublicSnapshot: React.FC = () => {
     );
   }
 
+  const publishedDate = new Date(publishedData.publishedAt).toLocaleString([], {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
     <div className="public-snapshot">
       <h1>Alliance Season Snapshot</h1>
+      <p>Last published on {new Date(publishedData.publishedAt).toLocaleString()}</p>
 
-      <section>
-        <AlliancesPage dataSource="published" />
-      </section>
-
-      <section>
-        <SeasonTimeline dataSource="published" />
-      </section>
-
-      <section>
-        <MapPage dataSource="published" />
-      </section>
-
-      <section>
-        <CalculationsPage dataSource="published" />
-      </section>
+      <AlliancesPage dataSource="published" />
+      <SeasonTimeline dataSource="published" />
+      <MapPage dataSource="published" />
+      <CalculationsPage dataSource="published" />
     </div>
   );
 };
