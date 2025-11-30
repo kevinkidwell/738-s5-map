@@ -59,7 +59,7 @@ button,
   min-width: 44px;  /* recommended target width */
 }
 
-/* Header (ensures contrast on dark background) */
+/* Header container */
 .app-header {
   padding: 1rem;
   background-color: #212529; /* dark background */
@@ -74,15 +74,17 @@ button,
   background-color: var(--bs-light);
   color: var(--bs-dark);
   border: none;
+  border-radius: 0; /* square edges for consistency */
   padding: 0.5rem 0.75rem;
+  font-weight: 500;
 }
 
-/* Interactive states: subtle primary */
+/* Hover/focus/active states: accessible subtle primary */
 .app-header button:hover,
 .app-header button:focus,
 .app-header button:active {
-  background-color: var(--bs-primary-bg-subtle);
-  color: var(--bs-primary-text);
+  background-color: var(--bs-primary);
+  color: #ffffff; /* ensures strong contrast */
 }
 
 /* Disabled state */
