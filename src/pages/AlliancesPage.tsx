@@ -108,31 +108,38 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             </div>
 
             {livePreviewShades.length > 0 && (
-              <div className="row mt-3">
-                {livePreviewShades.map((shade, i) => (
-                  <div key={i} className="col-md-3 d-flex flex-column align-items-center">
-                    <div
-                      className="rounded mb-1"
-                      style={{
-                        width: '100%',
-                        height: '40px',
-                        backgroundColor: shade
-                      }}
-                    />
-                    <small className="text-muted">{milestoneLabels[i]}</small>
-                    <small>{shade}</small>
-                  </div>
-                ))}
-              </div>
-            )}
+  <div className="row mt-3">
+    {livePreviewShades.map((shade, i) => (
+      <div key={i} className="col-md-3 d-flex flex-column align-items-center">
+        {/* Label above swatch */}
+        <small className="text-muted mb-1">{milestoneLabels[i]}</small>
 
-            <div className="row mt-3">
-              <div className="col-md-12">
-                <button type="submit" className="btn btn-primary-subtle w-100">
-                  Add Alliance
-                </button>
-              </div>
-            </div>
+        {/* Swatch */}
+        <div
+          className="rounded mb-1"
+          style={{
+            width: '100%',
+            height: '40px',
+            backgroundColor: shade
+          }}
+        />
+
+        {/* Hex below swatch */}
+        <small>{shade}</small>
+      </div>
+    ))}
+  </div>
+)}
+
+<div className="row mt-3">
+  <div className="col-md-12">
+    {/* Button styled with bs-primary-subtle */}
+    <button type="submit" className="btn btn-primary-subtle w-100">
+      Add Alliance
+    </button>
+  </div>
+</div>
+
           </form>
 
           <hr className="my-5" />
