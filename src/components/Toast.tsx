@@ -9,20 +9,19 @@ interface ToastProps {
 }
 
 const Toast: React.FC<ToastProps> = ({ message, type, show, onClose }) => {
-  if (!show) return null;
-
   return (
     <div
-      className="toast-container position-fixed bottom-0 end-0 p-3"
-      style={{ zIndex: 1055 }}
+      className="toast-container position-fixed bottom-0 start-0 p-3"
+      style={{ zIndex: 1055, marginBottom: '4rem' }} // offset above tabs
     >
       <div
         className={classNames(
-          'toast show align-items-center text-white border-0',
+          'toast align-items-center border-0',
+          show ? 'show fade' : 'hide',
           {
-            'bg-success': type === 'success',
-            'bg-info': type === 'info',
-            'bg-warning': type === 'warning',
+            'bg-success text-white': type === 'success',
+            'bg-info text-white': type === 'info',
+            'bg-warning text-dark': type === 'warning',
           }
         )}
         role="alert"
