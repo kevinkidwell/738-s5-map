@@ -7,7 +7,7 @@ type TimelineEntry = {
   milestone: string;
 };
 
-export const DatesPage: React.FC = () => {
+const DatesPage: React.FC = () => {
   const { upsertDate } = useApp();
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -116,3 +116,5 @@ export const DatesPage: React.FC = () => {
     </div>
   );
 };
+
+export default DatesPage;
