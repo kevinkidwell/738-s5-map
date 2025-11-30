@@ -1,6 +1,45 @@
 import React, { useState } from 'react';
 import { useApp } from '../store';
 
+// Utility: adjust brightness of a hex color
+function adjustBrightness(hex: string, amount: number): string {
+  let useHex = hex.replace('#', '');
+  if (useHex.length === 3) {
+    useHex = useHex.split('').map(c => c + c).join('');
+  }
+  const num = parseInt(useHex, 16);
+  let r = (num >> 16) + amount;
+  let g = ((num >> 8) & 0x00FF) + amount;
+  let b = (num & 0x0000FF) + amount;
+  r = Math.min(255, Math.max(0, r));
+  g = Math.min(255, Math.max(0, g));
+  b = Math.min(255, Math.max(0, b));
+  return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
+}
+
+// Utility: generate lighter/darker shades around a base color
+function generateShades(hex: string): string[] {
+  const shades: string[] = [];
+  for (let i = -2; i <= 2; i++) {
+    shades.push(adjustBrightness(hex, i * 30));
+  }
+  return shades;
+}
+
+// Utility: pick black or white text depending on background brightness
+function getContrastColor(hex: string): string {
+  let useHex = hex.replace('#', '');
+  if (useHex.length === 3) {
+    useHex = useHex.split('').map(c => c + c).join('');
+  }
+  const num = parseInt(useHex, 16);
+  const r = num >> 16;
+  const g = (num >> 8) & 0x00FF;
+  const b = num & 0x0000FF;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+  return luminance > 186 ? '#000' : '#fff';
+}
+
 const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
   const { alliances, publishedData, upsertAlliance } = useApp();
   const allianceList = dataSource === 'live' ? alliances : publishedData?.alliances || [];
@@ -18,6 +57,9 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
     setAllianceName('');
     setAllianceColor('#000000');
   };
+
+  const livePreviewShades =
+    /^#[0-9A-Fa-f]{6}$/.test(allianceColor) ? generateShades(allianceColor) : [];
 
   return (
     <div className="container py-4">
@@ -42,7 +84,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             <div className="input-group">
               <span
                 className="input-group-text"
-                style={{ backgroundColor: allianceColor, color: '#fff' }}
+                style={{ backgroundColor: allianceColor, color: getContrastColor(allianceColor) }}
               >
                 {allianceColor}
               </span>
@@ -59,6 +101,25 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             <small className="form-text text-muted">
               Enter a valid hex code (e.g. #FF5733).
             </small>
+
+            {/* Live preview of shades */}
+            {livePreviewShades.length > 0 && (
+              <div className="d-flex gap-2 flex-wrap mt-2">
+                {livePreviewShades.map((shade, i) => (
+                  <span
+                    key={i}
+                    className="badge"
+                    style={{
+                      backgroundColor: shade,
+                      color: getContrastColor(shade),
+                      padding: '0.5rem 1rem',
+                    }}
+                  >
+                    {shade}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="col-md-4">
@@ -73,7 +134,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
         <thead>
           <tr>
             <th scope="col">Alliance</th>
-            <th scope="col">Base Color</th>
+            <th scope="col">Base Color & Shades</th>
           </tr>
         </thead>
         <tbody>
@@ -81,16 +142,21 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>
-                <span
-                  className="badge"
-                  style={{
-                    backgroundColor: a.baseColor,
-                    color: '#fff',
-                    padding: '0.5rem 1rem',
-                  }}
-                >
-                  {a.baseColor}
-                </span>
+                <div className="d-flex gap-2 flex-wrap">
+                  {generateShades(a.baseColor).map((shade, i) => (
+                    <span
+                      key={i}
+                      className="badge"
+                      style={{
+                        backgroundColor: shade,
+                        color: getContrastColor(shade),
+                        padding: '0.5rem 1rem',
+                      }}
+                    >
+                      {shade}
+                    </span>
+                  ))}
+                </div>
               </td>
             </tr>
           ))}
