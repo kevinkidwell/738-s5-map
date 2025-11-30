@@ -79,12 +79,12 @@ button,
   font-weight: 500;
 }
 
-/* Hover/focus/active states: accessible subtle primary */
+/* Hover/focus/active states: subtle primary */
 .app-header button:hover,
 .app-header button:focus,
 .app-header button:active {
-  background-color: var(--bs-primary);
-  color: #ffffff; /* ensures strong contrast */
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text);
 }
 
 /* Disabled state */
@@ -171,6 +171,7 @@ main {
 .app-toast {
   position: fixed;
   bottom: 6rem; /* above the tabs */
+  margin-bottom: 5rem !important;
   left: 1rem;
   z-index: 1050;
   color: #ffffff;
