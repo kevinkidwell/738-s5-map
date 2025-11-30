@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 type Alliance = {
   name: string;
-  baseColor: string;
+  baseColor: string; // HEX string, ensure contrast in UI when used
   shades?: string[];
 };
 
@@ -29,6 +29,7 @@ type AppState = {
   upsertAlliance: (a: Alliance) => void;
   upsertDate: (d: DateEntry) => void;
   publishSnapshot: () => void;
+  resetData: () => void;
 };
 
 export const useApp = create<AppState>()(
@@ -39,6 +40,7 @@ export const useApp = create<AppState>()(
       map: {},
       calculations: {},
       publishedData: null,
+
       upsertAlliance: (a) =>
         set((state) => ({
           alliances: [
@@ -46,26 +48,39 @@ export const useApp = create<AppState>()(
             a,
           ],
         })),
+
       upsertDate: (d) =>
         set((state) => ({
           dates: [
-            ...state.dates.filter((x) => x.date !== d.date),
+            ...state.dates.filter((x) => !(x.date === d.date && x.milestone === d.milestone)),
             d,
           ],
         })),
+
       publishSnapshot: () =>
-  set((state) => ({
-    publishedData: {
-      alliances: state.alliances,
-      dates: state.dates,
-      map: state.map,
-      calculations: state.calculations,
-      publishedAt: new Date().toISOString(),
-    },
-  })),
+        set((state) => ({
+          publishedData: {
+            alliances: state.alliances,
+            dates: state.dates,
+            map: state.map,
+            calculations: state.calculations,
+            publishedAt: new Date().toISOString(),
+          },
+        })),
+
+      resetData: () =>
+        set({
+          alliances: [],
+          dates: [],
+          map: {},
+          calculations: {},
+          // Keep publishedData intact to preserve public snapshot unless explicitly cleared elsewhere
+        }),
     }),
     {
-      name: 'alliance-manager-storage', // key in localStorage
+      name: 'alliance-manager-storage',
+      version: 1,
+      // optional: partialize to exclude transient UI state if added later
     }
   )
 );

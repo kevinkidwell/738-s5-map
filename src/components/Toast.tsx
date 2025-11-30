@@ -12,23 +12,26 @@ const Toast: React.FC<ToastProps> = ({ message, type, show, onClose }) => {
   return (
     <div
       className={classNames(
-        'toast align-items-center text-white border-0 position-fixed',
+        'toast app-toast align-items-center text-white',
         `bg-${type}`,
         { show }
       )}
-      style={{ bottom: '4rem', left: '1rem', zIndex: 1050 }}
-      role="alert"
-      aria-live="assertive"
+      style={{}}
+      role="status"
+      aria-live="polite"
       aria-atomic="true"
     >
       <div className="d-flex">
         <div className="toast-body">{message}</div>
         <button
           type="button"
-          className="btn-close btn-close-white me-2 m-auto"
-          aria-label="Close"
+          className="btn btn-sm btn-light ms-2"
           onClick={onClose}
-        ></button>
+          aria-label="Dismiss notification"
+        >
+          <span className="visually-hidden">Dismiss</span>
+          <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
   );

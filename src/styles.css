@@ -1,186 +1,93 @@
-/* Global reset and base styles */
-html {
-  font-size: 16px; /* base size */
+/* Base typography and colors (WCAG 2.1 AA contrast) */
+html, body {
+  height: 100%;
 }
 
-body, #root {
-  height: 100%;
-  margin: 0;
-  background: #111; /* dark background */
-  color: #eaeaea;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
-  font-size: 1rem; /* equals 16px */
+body {
+  color: #212529;
+  background-color: #ffffff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
 }
 
-/* App layout */
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding-bottom: 4rem; /* reserve space for tabs */
-}
-
-.map-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.sidebar {
-  padding: 1rem;
-}
-
-/* Sticky footer tabs */
-.tabs {
-  position: fixed;        /* stick to viewport */
-  bottom: 0;              /* anchor at bottom */
-  left: 0;
-  width: 100%;
-  display: flex;
-  border-top: 1px solid #212529;
-  background: #212529;
-  z-index: 1000;          /* keep above content */
-  padding: 1.125rem 0;    /* 1.5x original (was 0.75rem) */
-}
-
-/* Each tab */
-.tab {
-  flex: 1;
-  text-align: center;
-  cursor: pointer;
-  color: #eaeaea;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: background 0.2s, color 0.2s;
-}
-
-.tab:hover {
-  background: #2c3034;
-}
-
-.tab.active {
-  background: #ffffff;
-  color: #212529;
-  font-weight: 600;
-}
-
-/* Panels and editors */
-.panel {
+/* Skip link for keyboard users */
+.skip-link {
   position: absolute;
-  right: 1rem;
-  top: 1rem;
-  width: 20rem;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 0.5rem;
+  top: -40px;
+  left: 0;
+  background: #0d6efd;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 2000;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Global link styles with sufficient contrast */
+a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+/* Focus visible indicator across interactive elements */
+:focus-visible {
+  outline: 3px solid #ffbf47; /* high-contrast amber */
+  outline-offset: 2px;
+}
+
+/* Reduce motion where users prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Minimum target size guidance (enhanced hit areas) */
+button,
+.nav-link,
+[role="button"] {
+  min-height: 44px; /* recommended target height */
+  min-width: 44px;  /* recommended target width */
+}
+
+/* Header (ensures contrast on dark background) */
+.app-header {
   padding: 1rem;
-  font-size: 0.875rem; /* slightly smaller text inside panel */
-}
-
-/* Headings */
-h1 {
-  font-size: 2rem; /* 32px */
-  margin: 0 0 1rem;
-}
-
-h2 {
-  font-size: 1.5rem; /* 24px */
-  margin: 0 0 0.75rem;
-}
-
-h3 {
-  font-size: 1.25rem; /* 20px */
-  margin: 0 0 0.5rem;
-}
-
-h4 {
-  font-size: 1rem; /* 16px */
-  margin: 0 0 0.5rem;
-}
-
-/* Forms */
-input, select, button {
-  font-size: 1rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid #444;
-  background: #212529;
-  color: #eaeaea;
-}
-
-button {
-  cursor: pointer;
-  background: #2c3034;
-  border: 1px solid #444;
-}
-
-button:hover {
-  background: #3a3f44;
-}
-/* Alliance table wrapper */
-.alliance-table-wrapper {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-/* Table base */
-.alliance-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1rem;
-}
-
-/* Header styling */
-.alliance-table thead {
   background-color: #212529;
   color: #ffffff;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.app-header button {
+  background-color: #0d6efd;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+}
+.app-header button:hover {
+  background-color: #0b5ed7;
+}
+.app-header button:disabled {
+  opacity: 0.65;
 }
 
-.alliance-table th,
-.alliance-table td {
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 1px solid #444;
+/* Main content padding to avoid overlap with fixed bottom nav */
+main {
+  padding-bottom: 5rem;
 }
 
-.alliance-table td:first-child {
-  text-align: left;
-}
-
-/* Zebra striping */
-.alliance-table tbody tr:nth-child(odd) {
-  background-color: #2c3034; /* subtle dark gray */
-}
-
-.alliance-table tbody tr:nth-child(even) {
-  background-color: #1a1a1a; /* slightly darker for contrast */
-}
-
-/* Swatches */
-.swatch {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.5rem;
-  border: 1px solid #444;
-  margin: 0 auto;
-}
-
-.swatch-label {
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  line-height: 1.2;
-}
-
-.today-row {
-  background-color: #333; /* subtle highlight */
-  font-weight: 600;
-  border-left: 4px solid #4a90e2; /* accent stripe */
-}
-
-/* src/components/BottomNav.css */
+/* Bottom navigation bar */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -189,12 +96,17 @@ button:hover {
   display: flex;
   border-top: 1px solid #dee2e6;
   background-color: #f8f9fa;
+  z-index: 1040;
 }
 
 .bottom-nav .nav-link {
+  flex: 1; /* full-width clickable tabs */
   padding: 0.75rem;
   cursor: pointer;
+  text-align: center;
   transition: background-color 0.2s ease;
+  color: #0d6efd;
+  font-weight: 600;
 }
 
 .bottom-nav .nav-link:hover {
@@ -203,5 +115,38 @@ button:hover {
 
 .bottom-nav .nav-link.active {
   background-color: #0d6efd;
-  color: #fff;
+  color: #ffffff;
+}
+
+/* Icon spacing */
+.bottom-nav .nav-link .fa-solid {
+  margin-right: 0.5rem;
+}
+
+/* Toast: lower-left above tabs, semantic colors via Bootstrap */
+.app-toast {
+  position: fixed;
+  bottom: 5rem; /* above the tabs */
+  left: 1rem;
+  z-index: 1050;
+  color: #ffffff;
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.15);
+  max-width: 24rem;
+}
+
+.app-toast .toast-body {
+  font-size: 0.95rem;
+}
+
+/* Utility: visually hidden text for accessible labels */
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
 }
