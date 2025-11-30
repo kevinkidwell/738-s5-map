@@ -178,11 +178,22 @@ main {
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.15);
   max-width: 24rem;
+  opacity: 0;                /* start hidden */
+  transform: translateY(10px); /* slight slide up */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.app-toast.show {
+  opacity: 1;
+  transform: translateY(0);  /* animate upward */
 }
 
 .app-toast .toast-body {
   font-size: 0.95rem;
+  line-height: 1.4;          /* improve readability */
+  white-space: normal;       /* allow wrapping if needed */
 }
+
 
 /* Utility: visually hidden text for accessible labels */
 .visually-hidden {
@@ -226,20 +237,17 @@ form .input-group-text {
 }
 
 .add-alliance-btn {
-  border-radius: 0.375rem;   /* rounded corners */
-  padding: 0.5rem 0.75rem;   /* proper button padding */
-  font-weight: 500;          /* make text bolder */
-  display: inline-block;     /* ensure button shape */
-  text-align: center;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
 }
 
-/* Hover/focus/active states */
+/* Interactive states: subtle primary */
 .add-alliance-btn:hover,
 .add-alliance-btn:focus,
 .add-alliance-btn:active {
-  background-color: var(--bs-primary);
-  color: #fff;               /* strong contrast */
-  outline: none;             /* remove default outline */
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text);
 }
 
 /* Disabled state */
