@@ -12,12 +12,20 @@ import './styles.css';
 function App() {
   const { publishSnapshot } = useApp();
 
+  const copySnapshotLink = () => {
+    const url = `${window.location.origin}/public`;
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Snapshot link copied to clipboard!');
+    });
+  };
+
   return (
     <BrowserRouter>
       <div className="app">
-        {/* Header with publish button */}
-        <header style={{ padding: '1rem', background: '#212529', color: '#fff' }}>
+        {/* Header with publish + share buttons */}
+        <header style={{ padding: '1rem', background: '#212529', color: '#fff', display: 'flex', gap: '1rem' }}>
           <button onClick={publishSnapshot}>📤 Publish Snapshot</button>
+          <button onClick={copySnapshotLink}>🔗 Copy Snapshot Link</button>
         </header>
 
         {/* Main content area */}
@@ -32,14 +40,8 @@ function App() {
             <Route path="/map" element={<MapPage dataSource="live" />} />
             <Route path="/calculations" element={<CalculationsPage dataSource="live" />} />
 
-            {/* Public snapshot route (combined site) */}
+            {/* Combined snapshot site */}
             <Route path="/public" element={<PublicSnapshot />} />
-
-            {/* Optional: individual public routes if you want them */}
-            <Route path="/public/alliances" element={<AlliancesPage dataSource="published" />} />
-            <Route path="/public/dates" element={<SeasonTimeline dataSource="published" />} />
-            <Route path="/public/map" element={<MapPage dataSource="published" />} />
-            <Route path="/public/calculations" element={<CalculationsPage dataSource="published" />} />
           </Routes>
         </main>
 
