@@ -17,15 +17,6 @@ function adjustBrightness(hex: string, amount: number): string {
   return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
 }
 
-// Utility: generate lighter/darker shades around a base color
-function generateShades(hex: string): string[] {
-  const shades: string[] = [];
-  for (let i = -2; i <= 2; i++) {
-    shades.push(adjustBrightness(hex, i * 30));
-  }
-  return shades;
-}
-
 // Utility: pick black or white text depending on background brightness
 function getContrastColor(hex: string): string {
   let useHex = hex.replace('#', '');
@@ -38,6 +29,21 @@ function getContrastColor(hex: string): string {
   const b = num & 0x0000FF;
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
   return luminance > 186 ? '#000' : '#fff';
+}
+
+// Define milestone labels
+const milestoneLabels = [
+  "Stronghold First Capture",
+  "Stronghold Final Capture",
+  "City First Capture",
+  "City Final Capture"
+];
+
+// Generate exactly four shades for the milestones
+function generateMilestoneShades(baseHex: string): string[] {
+  // Tune offsets to your design intent: darker for "First", lighter for "Final"
+  const offsets = [-40, -10, +20, +50];
+  return offsets.map(amount => adjustBrightness(baseHex, amount));
 }
 
 const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
@@ -59,7 +65,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
   };
 
   const livePreviewShades =
-    /^#[0-9A-Fa-f]{6}$/.test(allianceColor) ? generateShades(allianceColor) : [];
+    /^#[0-9A-Fa-f]{6}$/.test(allianceColor) ? generateMilestoneShades(allianceColor) : [];
 
   return (
     <div className="container py-4">
@@ -102,21 +108,23 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
               Enter a valid hex code (e.g. #FF5733).
             </small>
 
-            {/* Live preview of shades */}
+            {/* Live preview with milestone labels */}
             {livePreviewShades.length > 0 && (
-              <div className="d-flex gap-2 flex-wrap mt-2">
+              <div className="d-flex gap-3 flex-wrap mt-2">
                 {livePreviewShades.map((shade, i) => (
-                  <span
-                    key={i}
-                    className="badge"
-                    style={{
-                      backgroundColor: shade,
-                      color: getContrastColor(shade),
-                      padding: '0.5rem 1rem',
-                    }}
-                  >
-                    {shade}
-                  </span>
+                  <div key={i} className="d-flex flex-column align-items-center">
+                    <span
+                      className="badge"
+                      style={{
+                        backgroundColor: shade,
+                        color: getContrastColor(shade),
+                        padding: '0.5rem 1rem',
+                      }}
+                    >
+                      {shade}
+                    </span>
+                    <small className="text-muted">{milestoneLabels[i]}</small>
+                  </div>
                 ))}
               </div>
             )}
@@ -134,7 +142,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
         <thead>
           <tr>
             <th scope="col">Alliance</th>
-            <th scope="col">Base Color & Shades</th>
+            <th scope="col">Milestone Colors</th>
           </tr>
         </thead>
         <tbody>
@@ -142,19 +150,21 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>
-                <div className="d-flex gap-2 flex-wrap">
-                  {generateShades(a.baseColor).map((shade, i) => (
-                    <span
-                      key={i}
-                      className="badge"
-                      style={{
-                        backgroundColor: shade,
-                        color: getContrastColor(shade),
-                        padding: '0.5rem 1rem',
-                      }}
-                    >
-                      {shade}
-                    </span>
+                <div className="d-flex gap-3 flex-wrap">
+                  {generateMilestoneShades(a.baseColor).map((shade, i) => (
+                    <div key={i} className="d-flex flex-column align-items-center">
+                      <span
+                        className="badge"
+                        style={{
+                          backgroundColor: shade,
+                          color: getContrastColor(shade),
+                          padding: '0.5rem 1rem',
+                        }}
+                      >
+                        {shade}
+                      </span>
+                      <small className="text-muted">{milestoneLabels[i]}</small>
+                    </div>
                   ))}
                 </div>
               </td>
