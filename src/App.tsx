@@ -51,31 +51,31 @@ function AppShell() {
     <>
       {/* Header with light buttons for dark background */}
       <header className="app-header bg-dark p-2 d-flex justify-content-end" role="banner">
-        <button
-          onClick={handlePublish}
-          className="btn btn-light me-2"
-          aria-label="Publish snapshot of the entire site"
-        >
-          <i className="fa-solid fa-upload me-2" aria-hidden="true"></i>
-          <span>Publish Snapshot</span>
-        </button>
-        <button
-          onClick={copySnapshotLink}
-          className="btn btn-light me-2"
-          aria-label="Copy public snapshot link"
-        >
-          <i className="fa-solid fa-link me-2" aria-hidden="true"></i>
-          <span>Copy Snapshot Link</span>
-        </button>
-        <button
-          onClick={viewSnapshot}
-          className="btn btn-light me-2"
-          aria-label="View published snapshot"
-        >
-          <i className="fa-solid fa-eye me-2" aria-hidden="true"></i>
-          <span>View Snapshot</span>
-        </button>
-      </header>
+  <button
+    onClick={handlePublish}
+    className="btn btn-light me-2 header-btn"
+    aria-label="Publish snapshot of the entire site"
+  >
+    <i className="fa-solid fa-upload me-2" aria-hidden="true"></i>
+    <span>Publish Snapshot</span>
+  </button>
+  <button
+    onClick={copySnapshotLink}
+    className="btn btn-light me-2 header-btn"
+    aria-label="Copy public snapshot link"
+  >
+    <i className="fa-solid fa-link me-2" aria-hidden="true"></i>
+    <span>Copy Snapshot Link</span>
+  </button>
+  <button
+    onClick={viewSnapshot}
+    className="btn btn-light me-2 header-btn"
+    aria-label="View published snapshot"
+  >
+    <i className="fa-solid fa-eye me-2" aria-hidden="true"></i>
+    <span>View Snapshot</span>
+  </button>
+</header>
 
       <main id="main-content" role="main">
         <Routes>

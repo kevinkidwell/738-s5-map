@@ -11,7 +11,7 @@ const BottomNav: React.FC = () => {
       <NavLink
         to="/alliances"
         className={({ isActive }) =>
-          `flex-fill text-center nav-item ${
+          `flex-fill text-center nav-item py-3 ${
             isActive ? 'btn btn-primary-subtle active' : 'btn btn-light'
           }`
         }
@@ -23,7 +23,7 @@ const BottomNav: React.FC = () => {
       <NavLink
         to="/dates"
         className={({ isActive }) =>
-          `flex-fill text-center nav-item ${
+          `flex-fill text-center nav-item py-3 ${
             isActive ? 'btn btn-primary-subtle active' : 'btn btn-light'
           }`
         }
@@ -35,7 +35,7 @@ const BottomNav: React.FC = () => {
       <NavLink
         to="/map"
         className={({ isActive }) =>
-          `flex-fill text-center nav-item ${
+          `flex-fill text-center nav-item py-3 ${
             isActive ? 'btn btn-primary-subtle active' : 'btn btn-light'
           }`
         }
@@ -47,7 +47,7 @@ const BottomNav: React.FC = () => {
       <NavLink
         to="/calculations"
         className={({ isActive }) =>
-          `flex-fill text-center nav-item ${
+          `flex-fill text-center nav-item py-3 ${
             isActive ? 'btn btn-primary-subtle active' : 'btn btn-light'
           }`
         }

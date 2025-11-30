@@ -62,25 +62,34 @@ button,
 /* Header (ensures contrast on dark background) */
 .app-header {
   padding: 1rem;
-  background-color: #212529;
+  background-color: #212529; /* dark background */
   color: #ffffff;
   display: flex;
   gap: 1rem;
   align-items: center;
 }
+
+/* Default header buttons: light style */
 .app-header button {
-  background-color: #0d6efd;
-  color: #ffffff;
+  background-color: var(--bs-light);
+  color: var(--bs-dark);
   border: none;
-  border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;
 }
-.app-header button:hover {
-  background-color: #0b5ed7;
+
+/* Interactive states: subtle primary */
+.app-header button:hover,
+.app-header button:focus,
+.app-header button:active {
+  background-color: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text);
 }
+
+/* Disabled state */
 .app-header button:disabled {
   opacity: 0.65;
 }
+
 
 /* Main content padding to avoid overlap with fixed bottom nav */
 main {
