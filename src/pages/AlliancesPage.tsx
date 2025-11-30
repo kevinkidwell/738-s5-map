@@ -17,21 +17,42 @@ function adjustBrightness(hex: string, amount: number): string {
   return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
 }
 
-// Utility: pick black or white text depending on background brightness
-function getContrastColor(hex: string): string {
-  let useHex = hex.replace('#', '');
-  if (useHex.length === 3) {
-    useHex = useHex.split('').map(c => c + c).join('');
-  }
-  const num = parseInt(useHex, 16);
-  const r = num >> 16;
-  const g = (num >> 8) & 0x00FF;
-  const b = num & 0x0000FF;
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
-  return luminance > 186 ? '#000' : '#fff';
+// Utility: calculate relative luminance
+function luminance(r: number, g: number, b: number): number {
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
 }
 
-// Define milestone labels
+// Utility: contrast ratio between two colors
+function contrastRatio(hex1: string, hex2: string): number {
+  function hexToRgb(hex: string) {
+    let useHex = hex.replace('#', '');
+    if (useHex.length === 3) {
+      useHex = useHex.split('').map(c => c + c).join('');
+    }
+    const num = parseInt(useHex, 16);
+    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+  }
+  const [r1, g1, b1] = hexToRgb(hex1);
+  const [r2, g2, b2] = hexToRgb(hex2);
+  const L1 = luminance(r1, g1, b1);
+  const L2 = luminance(r2, g2, b2);
+  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+}
+
+// Utility: pick text color that meets WCAG 2.1 AA
+function getAccessibleTextColor(bgHex: string): string {
+  const whiteContrast = contrastRatio(bgHex, '#ffffff');
+  const blackContrast = contrastRatio(bgHex, '#000000');
+  if (whiteContrast >= 4.5 && whiteContrast >= blackContrast) return '#fff';
+  if (blackContrast >= 4.5) return '#000';
+  return whiteContrast > blackContrast ? '#fff' : '#000';
+}
+
+// Milestone labels
 const milestoneLabels = [
   "Stronghold First Capture",
   "Stronghold Final Capture",
@@ -39,11 +60,14 @@ const milestoneLabels = [
   "City Final Capture"
 ];
 
-// Generate exactly four shades for the milestones
+// Generate four shades with base color used for City First Capture
 function generateMilestoneShades(baseHex: string): string[] {
-  // Tune offsets to your design intent: darker for "First", lighter for "Final"
-  const offsets = [-40, -10, +20, +50];
-  return offsets.map(amount => adjustBrightness(baseHex, amount));
+  return [
+    adjustBrightness(baseHex, +40), // Stronghold First Capture (lighter)
+    adjustBrightness(baseHex, -20), // Stronghold Final Capture (slightly darker)
+    baseHex,                        // City First Capture (exact user input)
+    adjustBrightness(baseHex, -60)  // City Final Capture (darkest)
+  ];
 }
 
 const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
@@ -90,7 +114,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
             <div className="input-group">
               <span
                 className="input-group-text"
-                style={{ backgroundColor: allianceColor, color: getContrastColor(allianceColor) }}
+                style={{ backgroundColor: allianceColor, color: getAccessibleTextColor(allianceColor) }}
               >
                 {allianceColor}
               </span>
@@ -117,7 +141,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
                       className="badge"
                       style={{
                         backgroundColor: shade,
-                        color: getContrastColor(shade),
+                        color: getAccessibleTextColor(shade),
                         padding: '0.5rem 1rem',
                       }}
                     >
@@ -157,7 +181,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
                         className="badge"
                         style={{
                           backgroundColor: shade,
-                          color: getContrastColor(shade),
+                          color: getAccessibleTextColor(shade),
                           padding: '0.5rem 1rem',
                         }}
                       >
