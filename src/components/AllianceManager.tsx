@@ -39,12 +39,12 @@ export const AllianceManager: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="alliance-table-wrapper">
       <h2>Alliance Colors</h2>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table className="alliance-table">
         <thead>
           <tr>
-            <th style={{ textAlign: 'left', padding: '0.75rem 0.5rem' }}>Alliance</th>
+            <th>Alliance</th>
             <th>Dig Site (First)</th>
             <th>City (First)</th>
             <th>City (Final)</th>
@@ -55,44 +55,39 @@ export const AllianceManager: React.FC = () => {
             const shades = a.shades ?? generateShades(a.baseColor);
             return (
               <tr key={a.name}>
-                <td style={{ padding: '1rem 0.5rem', fontSize: '1rem' }}>{a.name}</td>
+                <td>{a.name}</td>
                 {[0, 1, 2].map((i) => (
-                  <td key={i} style={{ textAlign: 'center', padding: '1rem 0.5rem' }}>
-                    {editing?.name === a.name && editing.index === i ? (
-                      <div>
-                        <input
-                          value={hexInput}
-                          onChange={(e) => setHexInput(e.target.value)}
-                          style={{ width: '6rem', fontSize: '0.875rem' }}
-                        />
-                        <button onClick={applyEdit} style={{ marginLeft: '0.5rem' }}>Save</button>
-                      </div>
-                    ) : (
-                      <div onClick={() => handleEdit(a.name, i, shades[i])} style={{ cursor: 'pointer' }}>
-                        <div style={{
-                          width: '3rem',
-                          height: '3rem',
-                          backgroundColor: shades[i],
-                          borderRadius: '0.5rem',
-                          border: '1px solid #444',
-                          margin: '0 auto',
-                        }} />
-                        <div style={{
-                          fontSize: '0.75rem',
-                          marginTop: '0.5rem',
-                          lineHeight: '1.2',
-                        }}>
-                          {["Dig Site", "City", "City"][i]}<br />({["First", "First", "Final"][i]})
+                  <td key={i}>
+                    <div style={{ textAlign: 'center' }}>
+                      <div
+                        className="swatch"
+                        style={{ backgroundColor: shades[i], width: '3rem', height: '3rem' }}
+                      />
+                      {editing?.name === a.name && editing.index === i ? (
+                        <div style={{ marginTop: '0.5rem', display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+                          <input
+                            value={hexInput}
+                            onChange={(e) => setHexInput(e.target.value)}
+                            style={{ width: '6rem', fontSize: '0.875rem' }}
+                          />
+                          <button onClick={applyEdit}>Save</button>
                         </div>
-                      </div>
-                    )}
+                      ) : (
+                        <div
+                          onClick={() => handleEdit(a.name, i, shades[i])}
+                          style={{ marginTop: '0.5rem', fontSize: '0.75rem', cursor: 'pointer' }}
+                        >
+                          {shades[i]}
+                        </div>
+                      )}
+                    </div>
                   </td>
                 ))}
               </tr>
             );
           })}
           <tr>
-            <td colSpan={4} style={{ textAlign: 'center', padding: '1rem' }}>
+            <td colSpan={4} style={{ textAlign: 'center' }}>
               <button onClick={() => setShowAdd(!showAdd)}>➕ Add Alliance</button>
             </td>
           </tr>
