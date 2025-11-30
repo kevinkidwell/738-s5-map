@@ -1,67 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import MapPage from './pages/MapPage';
+import AlliancesPage from './pages/AlliancesPage';
+import DatesPage from './pages/DatesPage';
+import CalculationsPage from './pages/CalculationsPage';
+import BottomNav from './components/BottomNav';
 import './styles.css';
-import { useApp } from './store';
-import { buildSquares } from './utils/layout';
-import { GridCanvas } from './components/GridCanvas';
-import { BottomTabs } from './components/BottomTabs';
-import { AllianceManager } from './components/AllianceManager';
-import { SquareEditor } from './components/SquareEditor';
 
 export default function App() {
-  const { setSquares } = useApp();
-  const [activeTab, setActiveTab] = useState(0);
-
-  useEffect(() => {
-    setSquares(buildSquares());
-  }, [setSquares]);
-
   return (
-    <div className="app">
-      <div className="map-container">
-        <GridCanvas gap={2} macroPad={24} />
-        <SquareEditor />
-        {activeTab === 1 && (
-          <div className="panel" style={{ left: 16, right: 'auto' }}>
-            <AllianceManager />
-          </div>
-        )}
-        {activeTab === 2 && (
-          <div className="panel" style={{ left: 16, right: 'auto' }}>
-            <DateSettings />
-          </div>
-        )}
+    <BrowserRouter>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<Navigate to="/map" />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/alliances" element={<AlliancesPage />} />
+          <Route path="/dates" element={<DatesPage />} />
+          <Route path="/calculations" element={<CalculationsPage />} />
+        </Routes>
+        <BottomNav />
       </div>
-      <BottomTabs active={activeTab} onChange={setActiveTab} />
-    </div>
+    </BrowserRouter>
   );
 }
-
-const DateSettings: React.FC = () => {
-  const { dateOptions, setDateOptions } = useApp();
-  const [newDate, setNewDate] = useState('');
-  return (
-    <div>
-      <h3>Date Settings</h3>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input
-          placeholder="YYYY-MM-DD"
-          value={newDate}
-          onChange={(e) => setNewDate(e.target.value)}
-        />
-        <button
-          onClick={() => {
-            if (newDate) setDateOptions([...dateOptions, newDate]);
-            setNewDate('');
-          }}
-        >
-          Add Date
-        </button>
-      </div>
-      <ul>
-        {dateOptions.map((d) => (
-          <li key={d}>{d}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
