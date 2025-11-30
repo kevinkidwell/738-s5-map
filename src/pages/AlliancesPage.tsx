@@ -17,7 +17,7 @@ function adjustBrightness(hex: string, amount: number): string {
 }
 
 function getAccessibleTextColor(bgHex: string): string {
-  return '#ffffff'; // simplified: always white for swatches
+  return '#ffffff';
 }
 
 const milestoneLabels = [
@@ -41,7 +41,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
   const allianceList = dataSource === 'live' ? alliances : publishedData?.alliances || [];
 
   const [allianceName, setAllianceName] = useState('');
-  const [allianceColor, setAllianceColor] = useState('#9370DB'); // medium purple default
+  const [allianceColor, setAllianceColor] = useState('#9370DB');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +128,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
 
             <div className="row mt-3">
               <div className="col-md-12">
-                <button type="submit" className="btn btn-primary w-100">
+                <button type="submit" className="btn btn-primary-subtle w-100">
                   Add Alliance
                 </button>
               </div>
