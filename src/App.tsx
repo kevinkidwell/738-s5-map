@@ -27,6 +27,7 @@ function App() {
             <Route path="/calculations" element={<CalculationsPage dataSource="live" />} />
 
             {/* Public snapshot routes */}
+            <Route path="/public" element={<PublicSnapshot />} />
             <Route path="/public/alliances" element={<AlliancesPage dataSource="published" />} />
             <Route path="/public/dates" element={<SeasonTimeline dataSource="published" />} />
             <Route path="/public/map" element={<MapPage dataSource="published" />} />

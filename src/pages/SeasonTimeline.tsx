@@ -14,6 +14,23 @@ const SeasonTimeline: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSo
   const [increment, setIncrement] = useState<number | ''>('');
   const [generated, setGenerated] = useState<TimelineEntry[]>([]);
 
+  // Known milestones keyed by "week-day"
+  const knownMilestones: Record<string, string> = {
+    '1-4': 'Fiona Exclusive Weapon',
+    '3-4': 'Stetmann Exclusive Weapon',
+    '2-15': 'Trade Post Level 1 Unlocks',
+    '3-16': 'Trade Post Level 2 Unlocks',
+    '3-17': 'Trade Post Level 3 Unlocks',
+    '3-18': 'Trade Post Level 4 Unlocks — Stetmann Exclusive Weapon',
+    '3-19': 'Trade Post Level 5 Unlocks',
+    '3-22': 'TP Lvl 1 - Protection Drops',
+    '4-23': 'TP Lvl 2 - Protection Drops',
+    '4-24': 'TP Lvl 3 - Protection Drops',
+    '4-26': 'TP Lvl 4 - Protection Drops',
+    '3-21': 'Grand Nexus (Sunday)',
+    '4-25': 'Warzone Outpost Construction Completed',
+  };
+
   // Use published snapshot if requested, otherwise live data
   const data =
     dataSource === 'published'
@@ -35,7 +52,9 @@ const SeasonTimeline: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSo
       const dateStr = format(d, 'yyyy-MM-dd');
       const week = Math.floor(i / 7) + 1;
       const day = i + 1;
-      result.push({ date: dateStr, milestone: '' });
+      const key = `${week}-${day}`;
+      const milestone = knownMilestones[key] ?? '';
+      result.push({ date: dateStr, milestone });
     }
     setGenerated(result);
   };
