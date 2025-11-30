@@ -12,7 +12,7 @@ const Toast: React.FC<ToastProps> = ({ message, type, show, onClose }) => {
   return (
     <div
       className="toast-container position-fixed bottom-0 start-0 p-3"
-      style={{ zIndex: 1055, marginBottom: '4rem' }} // offset above tabs
+      style={{ zIndex: 1055, marginBottom: '5rem' }} // offset above tabs
     >
       <div
         className={classNames(
