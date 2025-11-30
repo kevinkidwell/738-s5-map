@@ -150,3 +150,15 @@ main {
   width: 1px !important;
   overflow: hidden;
 }
+
+/* Alliance Manager form adjustments */
+form .form-control,
+form .input-group-text,
+form button {
+  height: 44px; /* WCAG recommended minimum target size */
+}
+
+form .input-group-text {
+  min-width: 6rem; /* enough space to show hex code */
+  text-align: center;
+}

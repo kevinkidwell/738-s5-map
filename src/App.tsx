@@ -8,7 +8,6 @@ import CalculationsPage from './pages/CalculationsPage';
 import BottomNav from './components/BottomNav';
 import PublicSnapshot from './pages/PublicSnapshot';
 import Toast from './components/Toast';
-import './styles.css';
 
 function AppShell() {
   const navigate = useNavigate();
