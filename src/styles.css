@@ -170,7 +170,7 @@ main {
 /* Toast: lower-left above tabs, semantic colors via Bootstrap */
 .app-toast {
   position: fixed;
-  bottom: 5rem; /* above the tabs */
+  bottom: 6rem; /* above the tabs */
   left: 1rem;
   z-index: 1050;
   color: #ffffff;
