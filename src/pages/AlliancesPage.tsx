@@ -134,9 +134,9 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
 <div className="row mt-3">
   <div className="col-md-12">
     {/* Button styled with bs-primary-subtle */}
-    <button type="submit" className="btn btn-primary-subtle w-100">
-      Add Alliance
-    </button>
+    <button type="submit" className="btn btn-primary-subtle add-alliance-btn w-100">
+  Add Alliance
+</button>
   </div>
 </div>
 
