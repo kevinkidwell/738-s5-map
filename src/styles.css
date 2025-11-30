@@ -195,6 +195,10 @@ main {
   white-space: normal;       /* allow wrapping if needed */
 }
 
+.toast-container {
+  margin-bottom: 5rem !important;
+}
+
 
 /* Utility: visually hidden text for accessible labels */
 .visually-hidden {
