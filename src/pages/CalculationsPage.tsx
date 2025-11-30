@@ -1,10 +1,17 @@
 import React from 'react';
+import { useApp } from '../store';
 
-export default function CalculationsPage() {
+const CalculationsPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
+  const { calculations, publishedData } = useApp();
+  const data = dataSource === 'published' ? publishedData?.calculations ?? {} : calculations;
+
   return (
-    <div className="sidebar">
+    <div>
       <h2>Calculations</h2>
-      <p>Here we’ll add alliance contribution calculations, totals, and analytics.</p>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {dataSource === 'live' && <p>Calculation inputs + editing controls go here…</p>}
     </div>
   );
-}
+};
+
+export default CalculationsPage;

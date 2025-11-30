@@ -1,8 +1,9 @@
+// src/pages/AllianceManager.tsx
 import React, { useState } from 'react';
 import { useApp } from '../store';
 import { generateShades } from '../utils/color';
 
-export const AllianceManager: React.FC = () => {
+const AllianceManager: React.FC<{ isLocked: boolean }> = ({ isLocked }) => {
   const { alliances, upsertAlliance } = useApp();
   const [editing, setEditing] = useState<{ name: string; index: number } | null>(null);
   const [hexInput, setHexInput] = useState('');
@@ -11,6 +12,7 @@ export const AllianceManager: React.FC = () => {
   const [newHex, setNewHex] = useState('#4a90e2');
 
   const handleEdit = (name: string, index: number, currentHex: string) => {
+    if (isLocked) return;
     setEditing({ name, index });
     setHexInput(currentHex);
   };
@@ -75,7 +77,11 @@ export const AllianceManager: React.FC = () => {
                       ) : (
                         <div
                           onClick={() => handleEdit(a.name, i, shades[i])}
-                          style={{ marginTop: '0.5rem', fontSize: '0.75rem', cursor: 'pointer' }}
+                          style={{
+                            marginTop: '0.5rem',
+                            fontSize: '0.75rem',
+                            cursor: isLocked ? 'default' : 'pointer',
+                          }}
                         >
                           {shades[i]}
                         </div>
@@ -86,15 +92,17 @@ export const AllianceManager: React.FC = () => {
               </tr>
             );
           })}
-          <tr>
-            <td colSpan={4} style={{ textAlign: 'center' }}>
-              <button onClick={() => setShowAdd(!showAdd)}>➕ Add Alliance</button>
-            </td>
-          </tr>
+          {!isLocked && (
+            <tr>
+              <td colSpan={4} style={{ textAlign: 'center' }}>
+                <button onClick={() => setShowAdd(!showAdd)}>➕ Add Alliance</button>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
 
-      {showAdd && (
+      {!isLocked && showAdd && (
         <div style={{ marginTop: '1rem', padding: '1rem', borderTop: '1px solid #444' }}>
           <h3>Add New Alliance</h3>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
@@ -116,3 +124,5 @@ export const AllianceManager: React.FC = () => {
     </div>
   );
 };
+
+export default AllianceManager;

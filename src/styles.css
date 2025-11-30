@@ -173,3 +173,9 @@ button:hover {
   margin-top: 0.5rem;
   line-height: 1.2;
 }
+
+.today-row {
+  background-color: #333; /* subtle highlight */
+  font-weight: 600;
+  border-left: 4px solid #4a90e2; /* accent stripe */
+}
