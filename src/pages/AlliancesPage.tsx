@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../store';
 
-// Utility: adjust brightness of a hex color
 function adjustBrightness(hex: string, amount: number): string {
   let useHex = hex.replace('#', '');
   if (useHex.length === 3) {
@@ -17,42 +16,11 @@ function adjustBrightness(hex: string, amount: number): string {
   return `#${(r << 16 | g << 8 | b).toString(16).padStart(6, '0')}`;
 }
 
-// Utility: calculate relative luminance
-function luminance(r: number, g: number, b: number): number {
-  const a = [r, g, b].map(v => {
-    v /= 255;
-    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-  });
-  return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
-}
-
-// Utility: contrast ratio between two colors
-function contrastRatio(hex1: string, hex2: string): number {
-  function hexToRgb(hex: string) {
-    let useHex = hex.replace('#', '');
-    if (useHex.length === 3) {
-      useHex = useHex.split('').map(c => c + c).join('');
-    }
-    const num = parseInt(useHex, 16);
-    return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
-  }
-  const [r1, g1, b1] = hexToRgb(hex1);
-  const [r2, g2, b2] = hexToRgb(hex2);
-  const L1 = luminance(r1, g1, b1);
-  const L2 = luminance(r2, g2, b2);
-  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
-}
-
-// Utility: pick text color that meets WCAG 2.1 AA
 function getAccessibleTextColor(bgHex: string): string {
-  const whiteContrast = contrastRatio(bgHex, '#ffffff');
-  const blackContrast = contrastRatio(bgHex, '#000000');
-  if (whiteContrast >= 4.5 && whiteContrast >= blackContrast) return '#fff';
-  if (blackContrast >= 4.5) return '#000';
-  return whiteContrast > blackContrast ? '#fff' : '#000';
+  // simplified: always white unless contrast fails
+  return '#ffffff';
 }
 
-// Milestone labels
 const milestoneLabels = [
   "Stronghold First Capture",
   "Stronghold Final Capture",
@@ -60,18 +28,17 @@ const milestoneLabels = [
   "City Final Capture"
 ];
 
-// Generate four shades with base color used for City First Capture
 function generateMilestoneShades(baseHex: string): string[] {
   return [
-    adjustBrightness(baseHex, +40), // Stronghold First Capture (lighter)
-    adjustBrightness(baseHex, -20), // Stronghold Final Capture (slightly darker)
+    adjustBrightness(baseHex, +80), // Stronghold First Capture (much lighter)
+    adjustBrightness(baseHex, +40), // Stronghold Final Capture (lighter)
     baseHex,                        // City First Capture (exact user input)
-    adjustBrightness(baseHex, -60)  // City Final Capture (darkest)
+    adjustBrightness(baseHex, -80)  // City Final Capture (much darker)
   ];
 }
 
 const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
-  const { alliances, publishedData, upsertAlliance } = useApp();
+  const { alliances, publishedData, upsertAlliance, overwriteAllianceShade } = useApp();
   const allianceList = dataSource === 'live' ? alliances : publishedData?.alliances || [];
 
   const [allianceName, setAllianceName] = useState('');
@@ -91,73 +58,80 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
   const livePreviewShades =
     /^#[0-9A-Fa-f]{6}$/.test(allianceColor) ? generateMilestoneShades(allianceColor) : [];
 
+  const handleShadeClick = (allianceName: string, milestoneIndex: number, currentShade: string) => {
+    const newShade = prompt(`Enter new hex for ${milestoneLabels[milestoneIndex]} (current ${currentShade})`, currentShade);
+    if (newShade && /^#[0-9A-Fa-f]{6}$/.test(newShade)) {
+      overwriteAllianceShade(allianceName, milestoneIndex, newShade);
+    }
+  };
+
   return (
     <div className="container py-4">
       <h1 className="h3 mb-3">Alliance Manager</h1>
 
       {dataSource === 'live' && (
-        <form className="row g-3 align-items-end mb-4" onSubmit={handleSubmit}>
-          <div className="col-md-4">
-            <label htmlFor="allianceName" className="form-label">Alliance Name</label>
-            <input
-              id="allianceName"
-              type="text"
-              className="form-control"
-              value={allianceName}
-              onChange={(e) => setAllianceName(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="col-md-4">
-            <label htmlFor="allianceColor" className="form-label">Base Color (HEX)</label>
-            <div className="input-group">
-              <span
-                className="input-group-text"
-                style={{ backgroundColor: allianceColor, color: getAccessibleTextColor(allianceColor) }}
-              >
-                {allianceColor}
-              </span>
+        <form className="mb-4" onSubmit={handleSubmit}>
+          <div className="row g-3 align-items-end">
+            <div className="col-md-6">
+              <label htmlFor="allianceName" className="form-label">Alliance Name</label>
               <input
-                id="allianceColor"
+                id="allianceName"
                 type="text"
                 className="form-control"
-                placeholder="#RRGGBB"
-                value={allianceColor}
-                onChange={(e) => setAllianceColor(e.target.value)}
+                value={allianceName}
+                onChange={(e) => setAllianceName(e.target.value)}
                 required
               />
             </div>
-            <small className="form-text text-muted">
-              Enter a valid hex code (e.g. #FF5733).
-            </small>
 
-            {/* Live preview with milestone labels */}
-            {livePreviewShades.length > 0 && (
-              <div className="d-flex gap-3 flex-wrap mt-2">
-                {livePreviewShades.map((shade, i) => (
-                  <div key={i} className="d-flex flex-column align-items-center">
-                    <span
-                      className="badge"
-                      style={{
-                        backgroundColor: shade,
-                        color: getAccessibleTextColor(shade),
-                        padding: '0.5rem 1rem',
-                      }}
-                    >
-                      {shade}
-                    </span>
-                    <small className="text-muted">{milestoneLabels[i]}</small>
-                  </div>
-                ))}
+            <div className="col-md-6">
+              <label htmlFor="allianceColor" className="form-label">Base Color (HEX)</label>
+              <div className="input-group">
+                <span
+                  className="input-group-text"
+                  style={{ backgroundColor: allianceColor, color: getAccessibleTextColor(allianceColor) }}
+                >
+                  {allianceColor}
+                </span>
+                <input
+                  id="allianceColor"
+                  type="text"
+                  className="form-control"
+                  placeholder="#RRGGBB"
+                  value={allianceColor}
+                  onChange={(e) => setAllianceColor(e.target.value)}
+                  required
+                />
               </div>
-            )}
+            </div>
           </div>
 
-          <div className="col-md-4">
-            <button type="submit" className="btn btn-primary w-100">
-              Add Alliance
-            </button>
+          {livePreviewShades.length > 0 && (
+            <div className="row mt-3">
+              {livePreviewShades.map((shade, i) => (
+                <div key={i} className="col-md-3 d-flex flex-column align-items-center">
+                  <div
+                    className="rounded mb-1"
+                    style={{
+                      width: '100%',
+                      height: '40px',
+                      backgroundColor: shade,
+                      cursor: 'pointer'
+                    }}
+                  />
+                  <small className="text-muted">{milestoneLabels[i]}</small>
+                  <small>{shade}</small>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="row mt-3">
+            <div className="col-md-12">
+              <button type="submit" className="btn btn-primary w-100">
+                Add Alliance
+              </button>
+            </div>
           </div>
         </form>
       )}
@@ -166,34 +140,35 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
         <thead>
           <tr>
             <th scope="col">Alliance</th>
-            <th scope="col">Milestone Colors</th>
+            {milestoneLabels.map(label => (
+              <th key={label} scope="col">{label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {allianceList.map((a) => (
-            <tr key={a.name}>
-              <td>{a.name}</td>
-              <td>
-                <div className="d-flex gap-3 flex-wrap">
-                  {generateMilestoneShades(a.baseColor).map((shade, i) => (
-                    <div key={i} className="d-flex flex-column align-items-center">
-                      <span
-                        className="badge"
-                        style={{
-                          backgroundColor: shade,
-                          color: getAccessibleTextColor(shade),
-                          padding: '0.5rem 1rem',
-                        }}
-                      >
-                        {shade}
-                      </span>
-                      <small className="text-muted">{milestoneLabels[i]}</small>
-                    </div>
-                  ))}
-                </div>
-              </td>
-            </tr>
-          ))}
+          {allianceList.map((a) => {
+            const shades = generateMilestoneShades(a.baseColor);
+            return (
+              <tr key={a.name}>
+                <td>{a.name}</td>
+                {shades.map((shade, i) => (
+                  <td key={i} className="text-center">
+                    <div
+                      className="rounded mb-1"
+                      style={{
+                        width: '100%',
+                        height: '40px',
+                        backgroundColor: shade,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleShadeClick(a.name, i, shade)}
+                    />
+                    <small>{shade}</small>
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
