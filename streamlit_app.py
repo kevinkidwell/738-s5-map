@@ -1,56 +1,57 @@
 import streamlit as st
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+
+# --- Page config ---
+st.set_page_config(page_title="Alliance Map", layout="wide")
 
 # --- Placeholder data ---
-num_squares = 1989
+NUM_SQUARES = 1989
 df = pd.DataFrame({
-    "id": range(num_squares),
-    "type": ["Stronghold"] * num_squares,
-    "level": [1] * num_squares,
-    "current": [None] * num_squares,
-    "first_capture": [None] * num_squares,
-    "final_capture": [None] * num_squares,
-    "row": [i // 45 for i in range(num_squares)],   # placeholder layout
-    "col": [i % 45 for i in range(num_squares)]
+    "id": range(NUM_SQUARES),
+    "type": ["Stronghold"] * NUM_SQUARES,
+    "level": [1] * NUM_SQUARES,
+    "current": [None] * NUM_SQUARES,
+    "first_capture": [None] * NUM_SQUARES,
+    "final_capture": [None] * NUM_SQUARES,
+    "row": [i // 45 for i in range(NUM_SQUARES)],
+    "col": [i % 45 for i in range(NUM_SQUARES)]
 })
 
-# --- Sidebar: Alliance manager ---
-st.sidebar.header("Alliance Manager")
-alliances = {}
-num_alliances = st.sidebar.number_input("Number of alliances", 1, 10, 3)
-for i in range(num_alliances):
-    name = st.sidebar.text_input(f"Alliance {i+1} name", f"Alliance {i+1}")
-    color = st.sidebar.color_picker(f"{name} base color", "#4a90e2")
-    alliances[name] = color
+# --- Session state ---
+if "alliances" not in st.session_state:
+    st.session_state.alliances = {
+        "Alliance A": "#FF5733",
+        "Alliance B": "#33C1FF",
+        "Alliance C": "#9D33FF"
+    }
 
-# --- Shade logic (simplified demo) ---
-def generate_shades(hex_color):
-    return [hex_color, hex_color, hex_color]  # placeholder, expand with HSL logic
+if "dates" not in st.session_state:
+    st.session_state.dates = ["2025-11-01", "2025-11-15", "2025-12-01"]
 
-# --- Grid visualization ---
-df["color"] = df["current"].apply(lambda a: alliances.get(a, "#cccccc"))
+# --- Tabs ---
+tab1, tab2, tab3 = st.tabs(["🗺️ Map", "🎨 Alliance Manager", "📅 Date Settings"])
 
-fig = px.scatter(
-    df, x="col", y="row",
-    color="color",
-    hover_data=["id", "type", "level", "current", "first_capture", "final_capture"],
-    symbol="type"
-)
-fig.update_traces(marker=dict(size=12))
-fig.update_yaxes(autorange="reversed")
+# --- Map Tab ---
+with tab1:
+    st.subheader("Alliance Map")
 
-st.plotly_chart(fig, use_container_width=True)
+    def get_color(alliance):
+        return st.session_state.alliances.get(alliance, "#CCCCCC")
 
-# --- Square editor ---
-st.header("Square Editor")
-square_id = st.number_input("Select square ID", 0, num_squares-1, 0)
-selected = df.loc[square_id]
+    df["color"] = df["current"].apply(get_color)
+    df["label"] = df.apply(lambda row: f"{row['type'][:2]} Lv.{row['level']}", axis=1)
 
-st.write("Editing square:", selected.to_dict())
-new_type = st.selectbox("Type", ["City", "Stronghold", "Trade Post"], index=1)
-new_level = st.slider("Level", 1, 10, int(selected["level"]))
-new_current = st.selectbox("Current Alliance", list(alliances.keys()))
-
-# Update demo
-df.loc[square_id, ["type", "level", "current"]] = [new_type, new_level, new_current]
+    fig = px.scatter(
+        df, x="col", y="row", text="label",
+        color="color", hover_data=["id", "type", "level", "current"],
+        color_discrete_map="identity"
+    )
+    fig.update_traces(marker=dict(size=12), textposition="middle center")
+    fig.update_layout(
+        showlegend=False,
+        margin=dict(l=0, r=0, t=0, b=0),
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False)
+    )
+    fig.update_yaxes
