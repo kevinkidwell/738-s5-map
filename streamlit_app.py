@@ -54,4 +54,35 @@ with tab1:
         xaxis=dict(visible=False),
         yaxis=dict(visible=False)
     )
-    fig.update_yaxes
+    fig.update_yaxes(autorange="reversed")
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("### Edit Square")
+    square_id = st.number_input("Square ID", 0, NUM_SQUARES - 1, 0)
+    selected = df.loc[square_id]
+
+    new_type = st.selectbox("Type", ["City", "Stronghold", "Trade Post"], index=["City", "Stronghold", "Trade Post"].index(selected["type"]))
+    new_level = st.slider("Level", 1, 10, int(selected["level"]))
+    new_current = st.selectbox("Current Alliance", list(st.session_state.alliances.keys()), index=0)
+
+    df.loc[square_id, ["type", "level", "current"]] = [new_type, new_level, new_current]
+
+# --- Alliance Manager Tab ---
+with tab2:
+    st.subheader("Alliance Manager")
+    new_name = st.text_input("Alliance Name")
+    new_color = st.color_picker("Base Color", "#4a90e2")
+    if st.button("Add / Update Alliance"):
+        st.session_state.alliances[new_name] = new_color
+    st.write("Current Alliances:")
+    for name, color in st.session_state.alliances.items():
+        st.markdown(f"<span style='color:{color}'>{name}</span>", unsafe_allow_html=True)
+
+# --- Date Settings Tab ---
+with tab3:
+    st.subheader("Date Dropdowns")
+    new_date = st.date_input("Add Date")
+    if st.button("Add Date"):
+        st.session_state.dates.append(str(new_date))
+    st.write("Current Dates:")
+    st.write(st.session_state.dates)
