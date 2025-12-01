@@ -15,7 +15,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
 
   const [allianceName, setAllianceName] = useState('');
   const [allianceColor, setAllianceColor] = useState('#9370DB');
-  const [livePreviewShades, setLivePreviewShades] = useState<string[]>([]);
+  const [livePreviewShades, setLivePreviewShades] = useState<string[]>(generateAllianceShades('#9370DB'));
 
   const [editing, setEditing] = useState<{ allianceId: string; shadeIndex: number } | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -26,7 +26,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
     upsertAlliance(allianceName, allianceColor);
     setAllianceName('');
     setAllianceColor('#9370DB');
-    setLivePreviewShades([]);
+    setLivePreviewShades(generateAllianceShades('#9370DB'));
   };
 
   return (
@@ -62,6 +62,7 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
               </div>
             </div>
 
+            {/* Always render preview if we have 4 shades */}
             {livePreviewShades.length === 4 && (
               <div className="row mt-3">
                 {livePreviewShades.map((shade, i) => (
@@ -93,8 +94,68 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
         </>
       )}
 
-      {/* Alliance List table remains unchanged */}
-      ...
+      <h2 className="h5 mb-3">Alliance List</h2>
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            {milestoneLabels.map((label, i) => (
+              <th key={i} className="text-center">{label}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {allianceList.map((a) => (
+            <tr key={a.id}>
+              <td>{a.name}</td>
+              {a.shades.map((shade, i) => {
+                const isEditing = editing?.allianceId === a.id && editing?.shadeIndex === i;
+                return (
+                  <td key={i} className="text-center">
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        onBlur={() => {
+                          overwriteAllianceShade(a.id, i, editValue);
+                          setEditing(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            overwriteAllianceShade(a.id, i, editValue);
+                            setEditing(null);
+                          }
+                        }}
+                        className="form-control form-control-sm text-center"
+                        autoFocus
+                      />
+                    ) : (
+                      <div
+                        className="d-flex flex-column align-items-center cursor-pointer"
+                        onClick={() => {
+                          setEditing({ allianceId: a.id, shadeIndex: i });
+                          setEditValue(shade);
+                        }}
+                      >
+                        <div
+                          className="rounded mb-1"
+                          style={{
+                            width: '40px',
+                            height: '20px',
+                            backgroundColor: shade,
+                          }}
+                        />
+                        <small>{shade}</small>
+                      </div>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
