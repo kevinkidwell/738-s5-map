@@ -10,7 +10,7 @@ const milestoneLabels = [
 ];
 
 const AlliancesPage: React.FC<{ dataSource: "live" | "published" }> = ({ dataSource }) => {
-  const { alliances, publishedData, fetchAlliances, upsertAlliance, overwriteAllianceShade } = useApp();
+const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteAllianceShade } = useApp();
   const allianceList = dataSource === "live" ? alliances : publishedData?.alliances || [];
 
   const [allianceName, setAllianceName] = useState("");

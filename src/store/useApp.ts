@@ -18,7 +18,6 @@ interface AppState {
 export const useApp = create<AppState>((set) => ({
   alliances: [],
 
-  // Live subscription
   subscribeAlliances: () => {
     db.collection("alliances").onSnapshot((snapshot) => {
       const data: Alliance[] = snapshot.docs.map((doc) => ({
@@ -32,7 +31,7 @@ export const useApp = create<AppState>((set) => ({
   upsertAlliance: async (name, baseColor) => {
     await db.collection("alliances").add({
       name,
-      shades: generateAllianceShades(baseColor),
+      shades: [baseColor, baseColor, baseColor, baseColor],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   },
