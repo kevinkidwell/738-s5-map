@@ -10,8 +10,10 @@ const firebaseConfig = {
 
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase (only once)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
-// Export Firestore
-const db = firebase.firestore();
+// Export Firestore instance
+export const db = firebase.firestore();
