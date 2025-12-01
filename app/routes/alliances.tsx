@@ -14,7 +14,7 @@ export default function AlliancesRoute() {
   }, []);
 
   const handleAddAlliance = async (name: string, shades: string[]) => {
-    await addAlliance(name, shades[0]); // baseColor passed in, service generates shades
+    await addAlliance(name, shades[0]);
   };
 
   const handleEditShade = async (id: string, index: number, newColor: string) => {
