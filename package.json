@@ -10,16 +10,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@remix-run/node": "^2.9.0",
-    "@remix-run/react": "^2.9.0",
-    "@remix-run/serve": "^2.9.0",
-    "@remix-run/vercel": "^2.9.0",
+    "@remix-run/node": "^2.8.1",
+    "@remix-run/react": "^2.8.1",
+    "@remix-run/serve": "^2.8.1",
+    "@remix-run/vercel": "^2.8.1",
     "firebase": "^10.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.9.0",
+    "@remix-run/dev": "^2.8.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "typescript": "^5.6.3",
