@@ -1,5 +1,6 @@
-import { create } from 'zustand';
-import { generateAllianceShades } from '../utils/color';
+import { create } from "zustand";
+import { db } from "../firebase";
+import { generateAllianceShades } from "../utils/color";
 
 interface Alliance {
   id: string;
@@ -9,36 +10,37 @@ interface Alliance {
 
 interface AppState {
   alliances: Alliance[];
-  publishedData?: { alliances: Alliance[] };
-  upsertAlliance: (name: string, baseColor: string) => void;
-  overwriteAllianceShade: (id: string, shadeIndex: number, newColor: string) => void;
+  subscribeAlliances: () => void;
+  upsertAlliance: (name: string, baseColor: string) => Promise<void>;
+  overwriteAllianceShade: (id: string, shadeIndex: number, newColor: string) => Promise<void>;
 }
 
 export const useApp = create<AppState>((set) => ({
   alliances: [],
-  publishedData: undefined,
 
-  upsertAlliance: (name, baseColor) =>
-    set((state) => ({
-      alliances: [
-        ...state.alliances,
-        {
-          id: crypto.randomUUID(),
-          name,
-          shades: generateAllianceShades(baseColor),
-        },
-      ],
-    })),
+  // Live subscription
+  subscribeAlliances: () => {
+    db.collection("alliances").onSnapshot((snapshot) => {
+      const data: Alliance[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Alliance, "id">),
+      }));
+      set({ alliances: data });
+    });
+  },
 
-  overwriteAllianceShade: (id, shadeIndex, newColor) =>
-    set((state) => ({
-      alliances: state.alliances.map((a) =>
-        a.id === id
-          ? {
-              ...a,
-              shades: a.shades.map((s, i) => (i === shadeIndex ? newColor : s)),
-            }
-          : a
-      ),
-    })),
+  upsertAlliance: async (name, baseColor) => {
+    await db.collection("alliances").add({
+      name,
+      shades: generateAllianceShades(baseColor),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  },
+
+  overwriteAllianceShade: async (id, shadeIndex, newColor) => {
+    await db.collection("alliances").doc(id).update({
+      [`shades.${shadeIndex}`]: newColor,
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+  },
 }));

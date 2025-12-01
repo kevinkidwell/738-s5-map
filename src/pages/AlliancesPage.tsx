@@ -1,39 +1,45 @@
-import React, { useState } from 'react';
-import { useApp } from '../store/useApp';
-import { generateAllianceShades } from '../utils/color';
+import React, { useState, useEffect } from "react";
+import { useApp } from "../store/useApp";
+import { generateAllianceShades } from "../utils/color";
 
 const milestoneLabels = [
-  'Stronghold First Capture',
-  'Stronghold Final Capture',
-  'City First Capture',
-  'City Final Capture',
+  "Stronghold First Capture",
+  "Stronghold Final Capture",
+  "City First Capture",
+  "City Final Capture",
 ];
 
-const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSource }) => {
-  const { alliances, publishedData, upsertAlliance, overwriteAllianceShade } = useApp();
-  const allianceList = dataSource === 'live' ? alliances : publishedData?.alliances || [];
+const AlliancesPage: React.FC<{ dataSource: "live" | "published" }> = ({ dataSource }) => {
+  const { alliances, publishedData, fetchAlliances, upsertAlliance, overwriteAllianceShade } = useApp();
+  const allianceList = dataSource === "live" ? alliances : publishedData?.alliances || [];
 
-  const [allianceName, setAllianceName] = useState('');
-  const [allianceColor, setAllianceColor] = useState('#9370DB');
-  const [livePreviewShades, setLivePreviewShades] = useState<string[]>(generateAllianceShades('#9370DB'));
+  const [allianceName, setAllianceName] = useState("");
+  const [allianceColor, setAllianceColor] = useState("#9370DB");
+  const [livePreviewShades, setLivePreviewShades] = useState<string[]>(generateAllianceShades("#9370DB"));
 
   const [editing, setEditing] = useState<{ allianceId: string; shadeIndex: number } | null>(null);
-  const [editValue, setEditValue] = useState('');
+  const [editValue, setEditValue] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Load alliances from Firestore when page mounts
+  useEffect(() => {
+    subscribeAlliances();
+  }, [subscribeAlliances]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!allianceName.trim()) return;
-    upsertAlliance(allianceName, allianceColor);
-    setAllianceName('');
-    setAllianceColor('#9370DB');
-    setLivePreviewShades(generateAllianceShades('#9370DB'));
+    await upsertAlliance(allianceName, allianceColor);
+    setAllianceName("");
+    setAllianceColor("#9370DB");
+    setLivePreviewShades(generateAllianceShades("#9370DB"));
+    fetchAlliances(); // refresh list
   };
 
   return (
     <div className="container py-4">
       <h1 className="h3 mb-4">Alliance Manager</h1>
 
-      {dataSource === 'live' && (
+      {dataSource === "live" && (
         <>
           <h2 className="h5 mb-3">Add Alliance</h2>
           <form className="mb-4" onSubmit={handleSubmit}>
@@ -62,7 +68,6 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
               </div>
             </div>
 
-            {/* Always render preview if we have 4 shades */}
             {livePreviewShades.length === 4 && (
               <div className="row mt-3">
                 {livePreviewShades.map((shade, i) => (
@@ -71,8 +76,8 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
                     <div
                       className="rounded mb-1"
                       style={{
-                        width: '100%',
-                        height: '40px',
+                        width: "100%",
+                        height: "40px",
                         backgroundColor: shade,
                       }}
                     />
@@ -117,14 +122,16 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
                         type="text"
                         value={editValue}
                         onChange={(e) => setEditValue(e.target.value)}
-                        onBlur={() => {
-                          overwriteAllianceShade(a.id, i, editValue);
+                        onBlur={async () => {
+                          await overwriteAllianceShade(a.id, i, editValue);
                           setEditing(null);
+                          fetchAlliances();
                         }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            overwriteAllianceShade(a.id, i, editValue);
+                        onKeyDown={async (e) => {
+                          if (e.key === "Enter") {
+                            await overwriteAllianceShade(a.id, i, editValue);
                             setEditing(null);
+                            fetchAlliances();
                           }
                         }}
                         className="form-control form-control-sm text-center"
@@ -141,8 +148,8 @@ const AlliancesPage: React.FC<{ dataSource: 'live' | 'published' }> = ({ dataSou
                         <div
                           className="rounded mb-1"
                           style={{
-                            width: '40px',
-                            height: '20px',
+                            width: "40px",
+                            height: "20px",
                             backgroundColor: shade,
                           }}
                         />
