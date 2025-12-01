@@ -30,16 +30,21 @@ export const useApp = create<AppState>((set) => ({
 
   upsertAlliance: async (name, baseColor) => {
     await db.collection("alliances").add({
-      name,
-      shades: [baseColor, baseColor, baseColor, baseColor],
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+  name,
+  shades: [baseColor, baseColor, baseColor, baseColor], // always array of 4
+  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+});
   },
 
   overwriteAllianceShade: async (id, shadeIndex, newColor) => {
-    await db.collection("alliances").doc(id).update({
-      [`shades.${shadeIndex}`]: newColor,
-      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    const ref = db.collection("alliances").doc(id);
+const docSnap = await ref.get();
+if (docSnap.exists) {
+  const data = docSnap.data();
+  const shades = Array.isArray(data.shades) ? [...data.shades] : [];
+  shades[shadeIndex] = newColor;
+  await ref.update({ shades });
+}
+
   },
 }));

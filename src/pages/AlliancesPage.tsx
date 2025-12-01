@@ -10,7 +10,7 @@ const milestoneLabels = [
 ];
 
 const AlliancesPage: React.FC<{ dataSource: "live" | "published" }> = ({ dataSource }) => {
-const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteAllianceShade } = useApp();
+  const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteAllianceShade } = useApp();
   const allianceList = dataSource === "live" ? alliances : publishedData?.alliances || [];
 
   const [allianceName, setAllianceName] = useState("");
@@ -20,9 +20,8 @@ const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteA
   const [editing, setEditing] = useState<{ allianceId: string; shadeIndex: number } | null>(null);
   const [editValue, setEditValue] = useState("");
 
-  // Load alliances from Firestore when page mounts
   useEffect(() => {
-    subscribeAlliances();
+    subscribeAlliances(); // listen for live updates
   }, [subscribeAlliances]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +31,6 @@ const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteA
     setAllianceName("");
     setAllianceColor("#9370DB");
     setLivePreviewShades(generateAllianceShades("#9370DB"));
-    fetchAlliances(); // refresh list
   };
 
   return (
@@ -75,11 +73,7 @@ const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteA
                     <small className="text-muted mb-1">{milestoneLabels[i]}</small>
                     <div
                       className="rounded mb-1"
-                      style={{
-                        width: "100%",
-                        height: "40px",
-                        backgroundColor: shade,
-                      }}
+                      style={{ width: "100%", height: "40px", backgroundColor: shade }}
                     />
                     <small>{shade}</small>
                   </div>
@@ -113,52 +107,52 @@ const { alliances, publishedData, subscribeAlliances, upsertAlliance, overwriteA
           {allianceList.map((a) => (
             <tr key={a.id}>
               <td>{a.name}</td>
-              {a.shades.map((shade, i) => {
-                const isEditing = editing?.allianceId === a.id && editing?.shadeIndex === i;
-                return (
-                  <td key={i} className="text-center">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={editValue}
-                        onChange={(e) => setEditValue(e.target.value)}
-                        onBlur={async () => {
-                          await overwriteAllianceShade(a.id, i, editValue);
-                          setEditing(null);
-                          fetchAlliances();
-                        }}
-                        onKeyDown={async (e) => {
-                          if (e.key === "Enter") {
+              {Array.isArray(a.shades) ? (
+                a.shades.map((shade, i) => {
+                  const isEditing = editing?.allianceId === a.id && editing?.shadeIndex === i;
+                  return (
+                    <td key={i} className="text-center">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onBlur={async () => {
                             await overwriteAllianceShade(a.id, i, editValue);
                             setEditing(null);
-                            fetchAlliances();
-                          }
-                        }}
-                        className="form-control form-control-sm text-center"
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        className="d-flex flex-column align-items-center cursor-pointer"
-                        onClick={() => {
-                          setEditing({ allianceId: a.id, shadeIndex: i });
-                          setEditValue(shade);
-                        }}
-                      >
-                        <div
-                          className="rounded mb-1"
-                          style={{
-                            width: "40px",
-                            height: "20px",
-                            backgroundColor: shade,
                           }}
+                          onKeyDown={async (e) => {
+                            if (e.key === "Enter") {
+                              await overwriteAllianceShade(a.id, i, editValue);
+                              setEditing(null);
+                            }
+                          }}
+                          className="form-control form-control-sm text-center"
+                          autoFocus
                         />
-                        <small>{shade}</small>
-                      </div>
-                    )}
-                  </td>
-                );
-              })}
+                      ) : (
+                        <div
+                          className="d-flex flex-column align-items-center cursor-pointer"
+                          onClick={() => {
+                            setEditing({ allianceId: a.id, shadeIndex: i });
+                            setEditValue(shade);
+                          }}
+                        >
+                          <div
+                            className="rounded mb-1"
+                            style={{ width: "40px", height: "20px", backgroundColor: shade }}
+                          />
+                          <small>{shade}</small>
+                        </div>
+                      )}
+                    </td>
+                  );
+                })
+              ) : (
+                <td colSpan={4} className="text-center text-muted">
+                  No shades defined
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
