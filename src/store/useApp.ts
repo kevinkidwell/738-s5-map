@@ -1,5 +1,5 @@
-// src/store/useApp.ts
 import { create } from 'zustand';
+import { generateAllianceShades } from '../utils/color';
 
 interface Alliance {
   id: string;
@@ -7,13 +7,9 @@ interface Alliance {
   shades: string[];
 }
 
-interface PublishedData {
-  alliances: Alliance[];
-}
-
 interface AppState {
   alliances: Alliance[];
-  publishedData?: PublishedData;
+  publishedData?: { alliances: Alliance[] };
   upsertAlliance: (name: string, baseColor: string) => void;
   overwriteAllianceShade: (id: string, shadeIndex: number, newColor: string) => void;
 }
@@ -29,8 +25,7 @@ export const useApp = create<AppState>((set) => ({
         {
           id: crypto.randomUUID(),
           name,
-          // For now, just repeat the baseColor for all 4 milestone shades
-          shades: [baseColor, baseColor, baseColor, baseColor],
+          shades: generateAllianceShades(baseColor),
         },
       ],
     })),
