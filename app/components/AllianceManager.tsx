@@ -1,43 +1,39 @@
+// app/components/AllianceManager.tsx
 import { useEffect, useState } from "react";
 import AllianceForm from "./AllianceForm";
 import AllianceTable from "./AllianceTable";
-import {
-  addAlliance,
-  updateAllianceShade,
-  subscribeAlliances,
-} from "../services/alliances.server";
+import { addAlliance, updateAllianceShade } from "../services/alliances.server";
+import { subscribeAlliances } from "../services/alliances.client";
+import type { Alliance } from "../services/alliances.server";
 
-export type Alliance = { id: string; name: string; shades: string[] };
-
-type AllianceManagerProps = {
-  readOnly?: boolean;
-};
-
-export default function AllianceManager({ readOnly = false }: AllianceManagerProps) {
+export default function AllianceManager({ readOnly = false }: { readOnly?: boolean }) {
   const [alliances, setAlliances] = useState<Alliance[]>([]);
 
   useEffect(() => {
-    const unsubscribe = subscribeAlliances(setAlliances);
-    return () => unsubscribe();
+    const unsub = subscribeAlliances(setAlliances);
+    return () => unsub();
   }, []);
 
   const handleAddAlliance = async (name: string, shades: string[]) => {
-    if (!readOnly) {
-      await addAlliance(name, shades);
-    }
+    if (!readOnly) await addAlliance(name, shades);
   };
 
   const handleEditShade = async (id: string, index: number, newColor: string) => {
-    if (!readOnly) {
-      await updateAllianceShade(id, index, newColor);
-    }
+    if (!readOnly) await updateAllianceShade(id, index, newColor);
   };
 
   return (
     <div className="container py-4">
-      <h1 className="h3 mb-4">Alliance Manager</h1>
+      <div className="d-flex align-items-center justify-content-between mb-3">
+        <h1 className="h3 m-0">Alliance Manager</h1>
+        {!readOnly && (
+          <span className="badge bg-success">Editing Enabled</span>
+        )}
+        {readOnly && (
+          <span className="badge bg-secondary">Read-Only</span>
+        )}
+      </div>
 
-      {/* Hide form in read-only mode */}
       {!readOnly && <AllianceForm onSubmit={handleAddAlliance} />}
 
       <AllianceTable

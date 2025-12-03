@@ -1,3 +1,4 @@
+// app/root.tsx
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -9,7 +10,8 @@ import {
   NavLink,
 } from "@remix-run/react";
 
-import customStyles from "./styles/custom.css";
+import bootstrapCss from "bootstrap/dist/css/bootstrap.min.css";
+import customCss from "./styles/custom.css";
 
 export const meta: MetaFunction = () => ({
   title: "Alliance Manager",
@@ -17,7 +19,8 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: customStyles },
+  { rel: "stylesheet", href: bootstrapCss },
+  { rel: "stylesheet", href: customCss },
 ];
 
 export default function App() {
@@ -28,10 +31,39 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <nav className="nav nav-tabs mb-3">
-          <NavLink to="/map" className="nav-link">Map</NavLink>
-          <NavLink to="/alliances" className="nav-link">Alliances</NavLink>
-          <NavLink to="/snapshots" className="nav-link">Snapshots</NavLink>
+        <nav className="nav nav-tabs mb-3 px-3">
+          <NavLink
+            to="/map"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? "active" : ""}`
+            }
+          >
+            Map
+          </NavLink>
+          <NavLink
+            to="/alliances"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? "active" : ""}`
+            }
+          >
+            Alliances
+          </NavLink>
+          <NavLink
+            to="/public/map"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? "active" : ""}`
+            }
+          >
+            Public Map
+          </NavLink>
+          <NavLink
+            to="/public/alliances"
+            className={({ isActive }) =>
+              `nav-link ${isActive ? "active" : ""}`
+            }
+          >
+            Public Alliances
+          </NavLink>
         </nav>
 
         <main className="container-fluid">
