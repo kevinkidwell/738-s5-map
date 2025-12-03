@@ -31,7 +31,7 @@ export default function App() {
       </head>
       <body>
         <nav className="nav nav-tabs mb-3">
-          <NavLink to="/" end className="nav-link">
+          <NavLink to="/map" end className="nav-link">
             Map
           </NavLink>
           <NavLink to="/alliances" className="nav-link">
