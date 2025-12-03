@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="d-flex">
       <nav className="sidebar bg-light border-end vh-100 p-3" style={{ width: "240px" }}>
-        <h2 className="h5 mb-4">Alliance Manager</h2>
+        <h2 className="h5 mb-4">Season 5 Map - 738</h2>
         <ul className="nav flex-column">
           {navItems.map((item) => (
             <li key={item.path} className="nav-item mb-2">

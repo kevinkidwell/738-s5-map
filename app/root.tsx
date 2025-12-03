@@ -13,7 +13,7 @@ import customCss from "./styles/custom.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
 export const meta: MetaFunction = () => ({
-  title: "Alliance Manager",
+  title: "Season 5 Map - 738",
   description: "Manage alliances, maps, calculations, and dates",
 });
 
