@@ -84,12 +84,12 @@ main {
   padding: 0;
 }
 .btn-primary {
-  background-color: #212529;
-  border-color: #212529;
+  background-color: #444;
+  border-color: #444;
 }
 .btn-primary:hover, .btn-primary:focus {
-  background-color: #444444;
-  border-color: #444444;
+  background-color: #212529;
+  border-color: #212529;
 }
 .title-area {
   padding-left: 1rem;

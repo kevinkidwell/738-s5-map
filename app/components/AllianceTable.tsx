@@ -16,7 +16,7 @@ export default function AllianceTable({
 }) {
   return (
     <div className="table-responsive">
-      <table className="table table-hover align-middle border rounded overflow-hidden shadow-sm">
+      <table className="table table-hover align-middle rounded overflow-hidden shadow-sm m-0">
         <thead className="table-light text-uppercase small">
           <tr>
             <th scope="col">Alliance Name</th>
