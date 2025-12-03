@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import AllianceForm from "./AllianceForm";
 import AllianceTable from "./AllianceTable";
 import { addAlliance, updateAllianceShade, deleteAlliance } from "../services/alliances.server";
 import { subscribeAlliances } from "../services/alliances.client";
 import type { Alliance } from "../services/alliances.server";
 
-export default function AllianceManager({ readOnly = false }: { readOnly?: boolean }) {
+export default function AllianceManager() {
   const [alliances, setAlliances] = useState<Alliance[]>([]);
   const [loading, setLoading] = useState(true);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastType, setToastType] = useState<"success" | "error" | "info">("info");
 
   useEffect(() => {
     const unsub = subscribeAlliances((data) => {
@@ -19,112 +16,42 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
     return () => unsub();
   }, []);
 
-  const showToast = async (message: string, type: "success" | "error" | "info" = "info") => {
-    if (typeof window === "undefined") return;
-    setToastMessage(message);
-    setToastType(type);
-    const toastEl = document.getElementById("statusToast");
-    if (toastEl) {
-      const { Toast } = await import("bootstrap");
-      const bsToast = Toast.getOrCreateInstance(toastEl);
-      bsToast.show();
-    }
-  };
-
-  const handleAddAlliance = async (name: string, shades: string[]) => {
-    try {
-      if (!readOnly) {
-        await addAlliance(name, shades);
-        showToast("Alliance added successfully.", "success");
-      }
-    } catch {
-      showToast("Error adding alliance.", "error");
-    }
-  };
-
   const handleUpdateShade = async (id: string, shadeKey: string, newColor: string) => {
-    try {
-      if (!readOnly) {
-        await updateAllianceShade(id, shadeKey, newColor);
-        showToast("Shade updated successfully.", "success");
-      }
-    } catch {
-      showToast("Error updating shade.", "error");
-    }
+    await updateAllianceShade(id, shadeKey, newColor);
   };
 
   const handleDeleteAlliance = async (id: string) => {
-    try {
-      if (!readOnly) {
-        await deleteAlliance(id);
-        showToast("Alliance deleted successfully.", "success");
-      }
-    } catch {
-      showToast("Error deleting alliance.", "error");
-    }
+    await deleteAlliance(id);
+  };
+
+  const handleAddAlliance = async () => {
+    await addAlliance("New Alliance", ["#3B82F6", "#93C5FD", "#2563EB", "#1E40AF"]);
   };
 
   return (
-    <div className="container py-4">
-      <div className="d-flex align-items-center justify-content-between mb-3">
-        <h1 className="h3 m-0">Alliance Manager</h1>
-        <span
-          className={`badge ${readOnly ? "bg-secondary" : "bg-success"}`}
-          aria-label={readOnly ? "Read-only mode" : "Editing enabled"}
-        >
-          {readOnly ? "Read-Only" : "Editing Enabled"}
-        </span>
-      </div>
-      <p className="text-muted">
-        Manage your alliance network and color schemes. All changes are saved automatically.
-      </p>
+    <div className="card shadow-sm">
+      <div className="card-body">
+        <h2 className="h5 mb-3">Alliances</h2>
+        <p className="text-muted mb-4">
+          Manage your alliance network and color schemes
+        </p>
 
-      {!readOnly && (
-        <div className="card mb-4">
-          <div className="card-body">
-            <h2 className="h5">Add New Alliance</h2>
-            <AllianceForm
-              onSubmit={handleAddAlliance}
-              existingNames={alliances.map((a) => a.name.toLowerCase())}
-            />
+        {loading ? (
+          <div className="text-center py-5" aria-live="polite">
+            <div className="spinner-border text-primary" role="status" aria-hidden="true"></div>
+            <p className="mt-3">Loading alliances…</p>
           </div>
-        </div>
-      )}
+        ) : (
+          <AllianceTable
+            alliances={alliances}
+            onUpdateShade={handleUpdateShade}
+            onDeleteAlliance={handleDeleteAlliance}
+          />
+        )}
 
-      {loading ? (
-        <div className="text-center py-5" aria-live="polite">
-          <div className="spinner-border text-primary" role="status" aria-hidden="true"></div>
-          <p className="mt-3">Loading alliances…</p>
-        </div>
-      ) : (
-        <AllianceTable
-          alliances={alliances}
-          onUpdateShade={handleUpdateShade}
-          onDeleteAlliance={handleDeleteAlliance}
-        />
-      )}
-
-      {/* Toast container */}
-      <div className="toast-container position-fixed bottom-0 end-0 p-3">
-        <div
-          id="statusToast"
-          className={`toast align-items-center text-bg-${
-            toastType === "success" ? "success" : toastType === "error" ? "danger" : "info"
-          } border-0`}
-          role="alert"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <div className="d-flex">
-            <div className="toast-body">{toastMessage}</div>
-            <button
-              type="button"
-              className="btn-close btn-close-white me-2 m-auto"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-        </div>
+        <button className="btn btn-primary mt-3" onClick={handleAddAlliance}>
+          + Add Alliance
+        </button>
       </div>
     </div>
   );
