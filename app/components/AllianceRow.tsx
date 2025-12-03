@@ -32,22 +32,11 @@ export default function AllianceRow({
 
   return (
     <tr>
-      {/* Alliance name */}
       <td className="fw-semibold">{alliance.name}</td>
-
-      {/* Base color */}
       <td>{renderSwatch(alliance.shades[0], "base", "Base color")}</td>
-
-      {/* Light shade */}
       <td>{renderSwatch(alliance.shades[1], "light", "Light shade")}</td>
-
-      {/* Medium shade */}
       <td>{renderSwatch(alliance.shades[2], "medium", "Medium shade")}</td>
-
-      {/* Dark shade */}
       <td>{renderSwatch(alliance.shades[3], "dark", "Dark shade")}</td>
-
-      {/* Actions */}
       <td>
         <div className="d-flex">
           <button

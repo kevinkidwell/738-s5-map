@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import AllianceTable from "./AllianceTable";
-import { addAlliance, updateAllianceShade, deleteAlliance } from "../services/alliances.server";
+import {
+  addAlliance,
+  updateAllianceShade,
+  deleteAlliance,
+  getAlliances,
+  Alliance,
+} from "../services/alliances.server";
 import { subscribeAlliances } from "../services/alliances.client";
-import type { Alliance } from "../services/alliances.server";
 
 export default function AllianceManager() {
   const [alliances, setAlliances] = useState<Alliance[]>([]);
@@ -22,20 +27,23 @@ export default function AllianceManager() {
     newColor: string
   ) => {
     await updateAllianceShade(id, shadeKey, newColor);
+    setAlliances(await getAlliances());
   };
 
   const handleDeleteAlliance = async (id: string) => {
     await deleteAlliance(id);
+    setAlliances(await getAlliances());
   };
 
   const handleAddAlliance = async () => {
     await addAlliance("New Alliance", ["#3B82F6", "#93C5FD", "#2563EB", "#1E40AF"]);
+    setAlliances(await getAlliances());
   };
 
   return (
     <>
       {/* Header */}
-      <div className="title-area d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h1 className="h4 mb-1">Alliances</h1>
           <p className="text-muted mb-0">Manage your alliance network and color schemes</p>
