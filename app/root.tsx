@@ -6,21 +6,21 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  NavLink,
 } from "@remix-run/react";
-import customStyles from "./styles/custom.css";
 
+import customStyles from "./styles/custom.css";
 
 export const meta: MetaFunction = () => {
   return {
     title: "Alliance Manager",
-    description: "Manage alliances and snapshots",
+    description: "Manage alliances, maps, and snapshots",
   };
 };
 
-export const links: LinksFunction = () => ([
-  { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" },
+export const links: LinksFunction = () => [
   { rel: "stylesheet", href: customStyles },
-]);
+];
 
 export default function App() {
   return (
@@ -29,12 +29,26 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="bg-light">
-        <Outlet />
+      <body>
+        <nav className="nav nav-tabs mb-3">
+          <NavLink to="/" end className="nav-link">
+            Map
+          </NavLink>
+          <NavLink to="/alliances" className="nav-link">
+            Alliances
+          </NavLink>
+          <NavLink to="/snapshots" className="nav-link">
+            Snapshots
+          </NavLink>
+        </nav>
+
+        <main className="container-fluid">
+          <Outlet />
+        </main>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" />
       </body>
     </html>
   );
