@@ -1,4 +1,3 @@
-// app/root.tsx
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -31,33 +30,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        {/* Global layout wrapper */}
-        <div className="d-flex">
-          {/* Sidebar */}
-          <nav className="bg-light border-end vh-100 p-3" style={{ width: "240px" }}>
-            <h2 className="h5 mb-4">Alliance Manager</h2>
-            <ul className="nav flex-column">
-              <li className="nav-item mb-2">
-                <a className="nav-link fw-semibold" href="/map">Map</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a className="nav-link fw-semibold" href="/alliances">Alliances</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a className="nav-link fw-semibold" href="/calculations">Calculations</a>
-              </li>
-              <li className="nav-item mb-2">
-                <a className="nav-link fw-semibold" href="/dates">Dates</a>
-              </li>
-            </ul>
-          </nav>
-
-          {/* Main content */}
-          <main className="flex-grow-1 p-4 bg-white">
-            <Outlet />
-          </main>
-        </div>
-
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

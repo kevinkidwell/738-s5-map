@@ -7,12 +7,19 @@ export default function AllianceRow({
   onDelete,
 }: {
   alliance: Alliance;
-  onUpdateShade: (id: string, shadeKey: "base" | "light" | "medium" | "dark", newColor: string) => void;
+  onUpdateShade: (
+    id: string,
+    shadeKey: "base" | "light" | "medium" | "dark",
+    newColor: string
+  ) => void;
   onDelete: (id: string) => void;
 }) {
   return (
     <tr>
+      {/* Alliance name */}
       <td className="fw-semibold">{alliance.name}</td>
+
+      {/* Base color */}
       <td>
         <ColorSwatch
           value={alliance.shades[0]}
@@ -20,6 +27,8 @@ export default function AllianceRow({
           label="Base color"
         />
       </td>
+
+      {/* Light shade */}
       <td>
         <ColorSwatch
           value={alliance.shades[1]}
@@ -27,6 +36,8 @@ export default function AllianceRow({
           label="Light shade"
         />
       </td>
+
+      {/* Medium shade */}
       <td>
         <ColorSwatch
           value={alliance.shades[2]}
@@ -34,6 +45,8 @@ export default function AllianceRow({
           label="Medium shade"
         />
       </td>
+
+      {/* Dark shade */}
       <td>
         <ColorSwatch
           value={alliance.shades[3]}
@@ -41,6 +54,8 @@ export default function AllianceRow({
           label="Dark shade"
         />
       </td>
+
+      {/* Actions */}
       <td>
         <div className="d-flex">
           <button

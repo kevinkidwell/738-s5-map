@@ -262,16 +262,19 @@ form .input-group-text {
   cursor: not-allowed;
 }
 
-/* Subtle table header style matching the screenshot */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
 .table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
   letter-spacing: 0.03em;
 }
-
-/* Reduce row vertical padding to match compact control panel */
-.table > :not(caption) > * > * {
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+.table td {
+  vertical-align: middle;
 }
+
 
 /* Badge width and font for consistent hex presentation */
 .badge {

@@ -32,19 +32,24 @@ export default function ColorSwatch({
   };
 
   return (
-    <div className="d-flex align-items-center gap-2">
+    <div className="d-flex align-items-center gap-2 py-2">
+      {/* Hex swatch badge */}
       <span
         className="badge"
         style={{
           backgroundColor: color,
           color: getContrastColor(color),
           minWidth: "96px",
-          justifyContent: "center",
-          display: "inline-flex",
+          textAlign: "center",
+          fontWeight: 500,
+          borderRadius: "6px",
         }}
         aria-label={`${label} ${color}`}
-      >        {color}
+      >
+        {color}
       </span>
+
+      {/* Inline color picker */}
       <input
         type="color"
         className="form-control form-control-color"
@@ -52,8 +57,8 @@ export default function ColorSwatch({
         onChange={handleChange}
         title={`Edit ${label}`}
         aria-label={`Edit ${label}`}
+        style={{ height: "32px", width: "40px", padding: 0 }}
       />
     </div>
   );
 }
-

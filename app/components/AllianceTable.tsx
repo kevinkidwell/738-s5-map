@@ -7,20 +7,24 @@ export default function AllianceTable({
   onDeleteAlliance,
 }: {
   alliances: Alliance[];
-  onUpdateShade: (id: string, shadeKey: "base" | "light" | "medium" | "dark", newColor: string) => void;
+  onUpdateShade: (
+    id: string,
+    shadeKey: "base" | "light" | "medium" | "dark",
+    newColor: string
+  ) => void;
   onDeleteAlliance: (id: string) => void;
 }) {
   return (
     <div className="table-responsive">
-      <table className="table table-hover align-middle rounded overflow-hidden border">
+      <table className="table table-hover align-middle border rounded overflow-hidden shadow-sm">
         <thead className="table-light text-uppercase small">
           <tr>
-            <th>Alliance Name</th>
-            <th>Base Color</th>
-            <th>Light Shade</th>
-            <th>Medium Shade</th>
-            <th>Dark Shade</th>
-            <th>Actions</th>
+            <th scope="col">Alliance Name</th>
+            <th scope="col">Base Color</th>
+            <th scope="col">Light Shade</th>
+            <th scope="col">Medium Shade</th>
+            <th scope="col">Dark Shade</th>
+            <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,7 +38,7 @@ export default function AllianceTable({
           ))}
           {alliances.length === 0 && (
             <tr>
-              <td colSpan={6} className="text-muted text-center">
+              <td colSpan={6} className="text-muted text-center py-4">
                 No alliances yet.
               </td>
             </tr>
