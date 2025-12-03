@@ -7,7 +7,7 @@ export default function AllianceRow({
   onDelete,
 }: {
   alliance: Alliance;
-  onUpdateShade: (id: string, shadeKey: string, newColor: string) => void;
+  onUpdateShade: (id: string, shadeKey: "base" | "light" | "medium" | "dark", newColor: string) => void;
   onDelete: (id: string) => void;
 }) {
   return (
@@ -17,39 +17,36 @@ export default function AllianceRow({
         <ColorSwatch
           value={alliance.shades[0]}
           onChange={(color) => onUpdateShade(alliance.id, "base", color)}
+          label="Base color"
         />
       </td>
       <td>
         <ColorSwatch
           value={alliance.shades[1]}
           onChange={(color) => onUpdateShade(alliance.id, "light", color)}
+          label="Light shade"
         />
       </td>
       <td>
         <ColorSwatch
           value={alliance.shades[2]}
           onChange={(color) => onUpdateShade(alliance.id, "medium", color)}
+          label="Medium shade"
         />
       </td>
       <td>
         <ColorSwatch
           value={alliance.shades[3]}
           onChange={(color) => onUpdateShade(alliance.id, "dark", color)}
+          label="Dark shade"
         />
       </td>
       <td>
         <div className="d-flex">
-          <button
-            className="btn btn-sm btn-outline-secondary me-1"
-            aria-label={`Edit ${alliance.name}`}
-          >
+          <button className="btn btn-sm btn-outline-secondary me-2" title="Edit Alliance" aria-label={`Edit ${alliance.name}`}>
             <i className="bi bi-pencil"></i>
           </button>
-          <button
-            className="btn btn-sm btn-outline-danger"
-            onClick={() => onDelete(alliance.id)}
-            aria-label={`Delete ${alliance.name}`}
-          >
+          <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(alliance.id)} title="Delete Alliance" aria-label={`Delete ${alliance.name}`}>
             <i className="bi bi-trash"></i>
           </button>
         </div>

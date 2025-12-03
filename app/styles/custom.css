@@ -262,3 +262,29 @@ form .input-group-text {
   cursor: not-allowed;
 }
 
+/* Subtle table header style matching the screenshot */
+.table thead th {
+  letter-spacing: 0.03em;
+}
+
+/* Reduce row vertical padding to match compact control panel */
+.table > :not(caption) > * > * {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Badge width and font for consistent hex presentation */
+.badge {
+  font-weight: 500;
+}
+
+/* Sidebar link hover subtlety */
+.nav-link {
+  color: #495057;
+}
+.nav-link:hover {
+  color: #0d6efd;
+}
+.nav-link.active {
+  color: #0d6efd;
+}

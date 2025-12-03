@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function getContrastColor(hex: string): string {
-  const c = hex.substring(1);
+  const c = hex.replace("#", "");
   const rgb = parseInt(c, 16);
   const r = (rgb >> 16) & 0xff;
   const g = (rgb >> 8) & 0xff;
@@ -13,11 +13,17 @@ function getContrastColor(hex: string): string {
 export default function ColorSwatch({
   value,
   onChange,
+  label,
 }: {
   value: string;
   onChange: (newColor: string) => void;
+  label: string;
 }) {
   const [color, setColor] = useState(value);
+
+  useEffect(() => {
+    setColor(value);
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newColor = e.target.value;
@@ -32,8 +38,11 @@ export default function ColorSwatch({
         style={{
           backgroundColor: color,
           color: getContrastColor(color),
-          minWidth: "80px",
+          minWidth: "96px",
+          justifyContent: "center",
+          display: "inline-flex",
         }}
+        aria-label={`${label} ${color}`}
       >
         {color}
       </span>
@@ -42,8 +51,8 @@ export default function ColorSwatch({
         className="form-control form-control-color"
         value={color}
         onChange={handleChange}
-        title="Edit shade"
-        aria-label={`Edit color ${color}`}
+        title={`Edit ${label}`}
+        aria-label={`Edit ${label}`}
       />
     </div>
   );

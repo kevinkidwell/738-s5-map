@@ -7,51 +7,38 @@ export default function AllianceTable({
   onDeleteAlliance,
 }: {
   alliances: Alliance[];
-  onUpdateShade: (id: string, shadeKey: string, newColor: string) => void;
+  onUpdateShade: (id: string, shadeKey: "base" | "light" | "medium" | "dark", newColor: string) => void;
   onDeleteAlliance: (id: string) => void;
 }) {
   return (
-    <div className="card">
-      <div className="card-body">
-        <h2 className="h5 mb-3">Alliances</h2>
-        <p className="text-muted mb-4">
-          Manage your alliance network and color schemes
-        </p>
-        <div className="table-responsive">
-          <table className="table table-hover align-middle">
-            <thead className="table-light">
-              <tr>
-                <th scope="col">ALLIANCE NAME</th>
-                <th scope="col">BASE COLOR</th>
-                <th scope="col">LIGHT SHADE</th>
-                <th scope="col">MEDIUM SHADE</th>
-                <th scope="col">DARK SHADE</th>
-                <th scope="col">ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alliances.map((a) => (
-                <AllianceRow
-                  key={a.id}
-                  alliance={a}
-                  onUpdateShade={onUpdateShade}
-                  onDelete={onDeleteAlliance}
-                />
-              ))}
-              {alliances.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="text-muted text-center">
-                    No alliances yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <button className="btn btn-primary mt-3">
-          + Add Alliance
-        </button>
-      </div>
+    <div className="table-responsive">
+      <table className="table table-hover align-middle">
+        <thead className="table-light">
+          <tr className="text-uppercase small">
+            <th scope="col">Alliance name</th>
+            <th scope="col">Base color</th>
+            <th scope="col">Light shade</th>
+            <th scope="col">Medium shade</th>
+            <th scope="col">Dark shade</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {alliances.map((a) => (
+            <AllianceRow
+              key={a.id}
+              alliance={a}
+              onUpdateShade={onUpdateShade}
+              onDelete={onDeleteAlliance}
+            />
+          ))}
+          {alliances.length === 0 && (
+            <tr>
+              <td colSpan={6} className="text-muted text-center">No alliances yet.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
