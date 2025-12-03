@@ -21,6 +21,7 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
   }, []);
 
   const showToast = (message: string, type: "success" | "error" | "info" = "info") => {
+    if (typeof window === "undefined") return; // SSR guard
     setToastMessage(message);
     setToastType(type);
     const toastEl = document.getElementById("statusToast");

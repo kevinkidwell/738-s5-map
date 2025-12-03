@@ -28,6 +28,7 @@ export default function AllianceTable({
   const [error, setError] = useState<string | null>(null);
 
   const openModal = (alliance: Alliance, index: number, shade: string) => {
+    if (typeof window === "undefined") return; // SSR guard
     setSelectedAlliance(alliance);
     setSelectedIndex(index);
     setNewColor(shade);
@@ -47,10 +48,12 @@ export default function AllianceTable({
     if (selectedAlliance && selectedIndex !== null) {
       onEditShade(selectedAlliance.id, selectedIndex, newColor);
     }
-    const modalEl = document.getElementById("shadeModal");
-    if (modalEl) {
-      const bsModal = Modal.getInstance(modalEl);
-      bsModal?.hide();
+    if (typeof window !== "undefined") {
+      const modalEl = document.getElementById("shadeModal");
+      if (modalEl) {
+        const bsModal = Modal.getInstance(modalEl);
+        bsModal?.hide();
+      }
     }
   };
 
