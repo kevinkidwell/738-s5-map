@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Modal } from "bootstrap";
 
 type Alliance = { id: string; name: string; shades: string[] };
 
@@ -27,20 +26,23 @@ export default function AllianceTable({
   const [newColor, setNewColor] = useState<string>("#000000");
   const [error, setError] = useState<string | null>(null);
 
-  const openModal = (alliance: Alliance, index: number, shade: string) => {
+  const openModal = async (alliance: Alliance, index: number, shade: string) => {
     if (typeof window === "undefined") return; // SSR guard
     setSelectedAlliance(alliance);
     setSelectedIndex(index);
     setNewColor(shade);
     setError(null);
+
     const modalEl = document.getElementById("shadeModal");
     if (modalEl) {
-      const bsModal = new Modal(modalEl);
+      // Dynamically import Bootstrap only in the browser
+      const { Modal } = await import("bootstrap");
+      const bsModal = Modal.getOrCreateInstance(modalEl);
       bsModal.show();
     }
   };
 
-  const saveColor = () => {
+  const saveColor = async () => {
     if (!newColor || !/^#[0-9A-Fa-f]{6}$/.test(newColor)) {
       setError("Please select a valid hex color.");
       return;
@@ -48,9 +50,11 @@ export default function AllianceTable({
     if (selectedAlliance && selectedIndex !== null) {
       onEditShade(selectedAlliance.id, selectedIndex, newColor);
     }
+
     if (typeof window !== "undefined") {
       const modalEl = document.getElementById("shadeModal");
       if (modalEl) {
+        const { Modal } = await import("bootstrap");
         const bsModal = Modal.getInstance(modalEl);
         bsModal?.hide();
       }

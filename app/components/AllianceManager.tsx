@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Toast } from "bootstrap";
 import AllianceForm from "./AllianceForm";
 import AllianceTable from "./AllianceTable";
 import { addAlliance, updateAllianceShade } from "../services/alliances.server";
@@ -20,13 +19,14 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
     return () => unsub();
   }, []);
 
-  const showToast = (message: string, type: "success" | "error" | "info" = "info") => {
+  const showToast = async (message: string, type: "success" | "error" | "info" = "info") => {
     if (typeof window === "undefined") return; // SSR guard
     setToastMessage(message);
     setToastType(type);
     const toastEl = document.getElementById("statusToast");
     if (toastEl) {
-      const bsToast = new Toast(toastEl);
+      const { Toast } = await import("bootstrap");
+      const bsToast = Toast.getOrCreateInstance(toastEl);
       bsToast.show();
     }
   };
