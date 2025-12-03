@@ -7,6 +7,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import customStyles from "./styles/custom.css";
+
 
 export const meta: MetaFunction = () => {
   return {
@@ -17,7 +19,7 @@ export const meta: MetaFunction = () => {
 
 export const links: LinksFunction = () => ([
   { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" },
-  { rel: "stylesheet", href: "../styles/custom.css" },
+  { rel: "stylesheet", href: customStyles },
 ]);
 
 export default function App() {
