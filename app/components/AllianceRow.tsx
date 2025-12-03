@@ -1,4 +1,3 @@
-import ColorSwatch from "./ColorSwatch";
 import type { Alliance } from "../services/alliances.server";
 
 export default function AllianceRow({
@@ -14,46 +13,39 @@ export default function AllianceRow({
   ) => void;
   onDelete: (id: string) => void;
 }) {
+  const renderSwatch = (
+    shade: string,
+    shadeKey: "base" | "light" | "medium" | "dark",
+    label: string
+  ) => (
+    <div className="swatch-wrapper">
+      <div className="swatch-square" style={{ backgroundColor: shade }} />
+      <input
+        type="text"
+        className="form-control form-control-sm swatch-input"
+        value={shade}
+        onChange={(e) => onUpdateShade(alliance.id, shadeKey, e.target.value)}
+        aria-label={`${label} hex code`}
+      />
+    </div>
+  );
+
   return (
     <tr>
       {/* Alliance name */}
       <td className="fw-semibold">{alliance.name}</td>
 
       {/* Base color */}
-      <td>
-        <ColorSwatch
-          value={alliance.shades[0]}
-          onChange={(color) => onUpdateShade(alliance.id, "base", color)}
-          label="Base color"
-        />
-      </td>
+      <td>{renderSwatch(alliance.shades[0], "base", "Base color")}</td>
 
       {/* Light shade */}
-      <td>
-        <ColorSwatch
-          value={alliance.shades[1]}
-          onChange={(color) => onUpdateShade(alliance.id, "light", color)}
-          label="Light shade"
-        />
-      </td>
+      <td>{renderSwatch(alliance.shades[1], "light", "Light shade")}</td>
 
       {/* Medium shade */}
-      <td>
-        <ColorSwatch
-          value={alliance.shades[2]}
-          onChange={(color) => onUpdateShade(alliance.id, "medium", color)}
-          label="Medium shade"
-        />
-      </td>
+      <td>{renderSwatch(alliance.shades[2], "medium", "Medium shade")}</td>
 
       {/* Dark shade */}
-      <td>
-        <ColorSwatch
-          value={alliance.shades[3]}
-          onChange={(color) => onUpdateShade(alliance.id, "dark", color)}
-          label="Dark shade"
-        />
-      </td>
+      <td>{renderSwatch(alliance.shades[3], "dark", "Dark shade")}</td>
 
       {/* Actions */}
       <td>
