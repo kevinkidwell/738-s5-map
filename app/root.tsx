@@ -11,12 +11,10 @@ import {
 
 import customStyles from "./styles/custom.css";
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "Alliance Manager",
-    description: "Manage alliances, maps, and snapshots",
-  };
-};
+export const meta: MetaFunction = () => ({
+  title: "Alliance Manager",
+  description: "Manage alliances, maps, and snapshots",
+});
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: customStyles },
@@ -31,15 +29,9 @@ export default function App() {
       </head>
       <body>
         <nav className="nav nav-tabs mb-3">
-          <NavLink to="/map" end className="nav-link">
-            Map
-          </NavLink>
-          <NavLink to="/alliances" className="nav-link">
-            Alliances
-          </NavLink>
-          <NavLink to="/snapshots" className="nav-link">
-            Snapshots
-          </NavLink>
+          <NavLink to="/map" className="nav-link">Map</NavLink>
+          <NavLink to="/alliances" className="nav-link">Alliances</NavLink>
+          <NavLink to="/snapshots" className="nav-link">Snapshots</NavLink>
         </nav>
 
         <main className="container-fluid">

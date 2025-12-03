@@ -1,62 +1,48 @@
 import { useState } from "react";
-import { generateAllianceShades } from "../utils/color";
 
-export default function AllianceForm({
-  onSubmit,
-}: {
-  onSubmit: (name: string, shades: string[]) => Promise<void>;
-}) {
+type AllianceFormProps = {
+  onSubmit: (name: string, shades: string[]) => void;
+  readOnly?: boolean;
+};
+
+export default function AllianceForm({ onSubmit, readOnly }: AllianceFormProps) {
   const [name, setName] = useState("");
-  const [baseColor, setBaseColor] = useState("#9370DB");
-  const shades = generateAllianceShades(baseColor);
+  const [shade, setShade] = useState("#000000");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  if (readOnly) {
+    return null; // hide form in public view
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    await onSubmit(name.trim(), shades);
+    onSubmit(name, [shade]);
     setName("");
-    setBaseColor("#9370DB");
+    setShade("#000000");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-4">
-      <div className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">Alliance Name</label>
-          <input
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Dragon Clan"
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Base Color (Hex)</label>
-          <input
-            className="form-control"
-            value={baseColor}
-            onChange={(e) => setBaseColor(e.target.value)}
-            placeholder="#9370DB"
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="mb-3">
+      <div className="mb-2">
+        <label className="form-label">Alliance Name</label>
+        <input
+          type="text"
+          className="form-control"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
       </div>
-
-      <div className="row mt-3">
-        {shades.map((shade, i) => (
-          <div key={i} className="col-md-3 d-flex flex-column align-items-center">
-            <small className="text-muted mb-1">
-              {["Stronghold First", "Stronghold Final", "City First", "City Final"][i]}
-            </small>
-            <div
-              className="rounded mb-1"
-              style={{ width: "100%", height: 40, backgroundColor: shade }}
-            />
-            <small className="text-muted">{shade}</small>
-          </div>
-        ))}
+      <div className="mb-2">
+        <label className="form-label">Shade</label>
+        <input
+          type="color"
+          className="form-control form-control-color"
+          value={shade}
+          onChange={(e) => setShade(e.target.value)}
+        />
       </div>
-
-      <button type="submit" className="btn btn-primary mt-3 w-100">
+      <button type="submit" className="btn btn-primary">
         Add Alliance
       </button>
     </form>

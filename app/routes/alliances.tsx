@@ -14,7 +14,6 @@ export default function AlliancesRoute() {
   }, []);
 
   const handleAddAlliance = async (name: string, shades: string[]) => {
-    // ✅ Save the full shades array, not just the first element
     await addAlliance(name, shades);
   };
 

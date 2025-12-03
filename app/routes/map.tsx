@@ -1,10 +1,6 @@
 import { useState } from "react";
 
-type Square = {
-  id: string;
-  color: string;
-};
-
+type Square = { id: string; color: string };
 const GRID_SIZE = 10;
 
 function generateGrid(): Square[][] {
@@ -49,9 +45,7 @@ export default function Map() {
                   border: "1px solid #ccc",
                   cursor: "pointer",
                 }}
-                onClick={() =>
-                  handleColorChange(rowIndex, colIndex, "#f0c040")
-                }
+                onClick={() => handleColorChange(rowIndex, colIndex, "#f0c040")}
                 title={`Square ${square.id}`}
               />
             ))}
