@@ -1,39 +1,55 @@
-// app/services/alliances.server.ts
 import { db } from "./firebase.server";
 import {
   collection,
-  addDoc,
-  updateDoc,
+  getDocs,
   doc,
-  getDoc,
+  updateDoc,
+  addDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { generateAllianceShades } from "../utils/color";
 
-const alliancesRef = collection(db, "alliances");
+export type Alliance = {
+  id: string;
+  name: string;
+  shades: string[];
+};
 
-export async function addAlliance(name: string, baseColor: string) {
-  const shades = generateAllianceShades(baseColor);
-  return await addDoc(alliancesRef, {
-    name,
-    shades,
-    createdAt: new Date(),
+// 🔹 Fetch all alliances once
+export async function getAlliances(): Promise<Alliance[]> {
+  const snapshot = await getDocs(collection(db, "alliances"));
+  return snapshot.docs.map((docSnap) => ({
+    id: docSnap.id,
+    ...(docSnap.data() as Omit<Alliance, "id">),
+  }));
+}
+
+// 🔹 Subscribe to live updates
+export function subscribeAlliances(
+  callback: (alliances: Alliance[]) => void
+) {
+  const unsub = onSnapshot(collection(db, "alliances"), (snapshot) => {
+    const alliances = snapshot.docs.map((docSnap) => ({
+      id: docSnap.id,
+      ...(docSnap.data() as Omit<Alliance, "id">),
+    }));
+    callback(alliances);
   });
+  return unsub;
 }
 
-export async function updateAllianceShade(id: string, index: number, newColor: string) {
+// 🔹 Add a new alliance with full shades array
+export async function addAlliance(name: string, shades: string[]) {
+  await addDoc(collection(db, "alliances"), { name, shades });
+}
+
+// 🔹 Update a single shade by index
+export async function updateAllianceShade(
+  id: string,
+  index: number,
+  newColor: string
+) {
   const ref = doc(db, "alliances", id);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return;
-  const data = snap.data();
-  const shades = Array.isArray(data?.shades) ? [...data.shades] : ["", "", "", ""];
-  shades[index] = newColor;
-  await updateDoc(ref, { shades, lastUpdated: new Date() });
-}
-
-export function subscribeAlliances(callback: (alliances: any[]) => void) {
-  return onSnapshot(alliancesRef, (snapshot) => {
-    const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    callback(list);
+  await updateDoc(ref, {
+    [`shades.${index}`]: newColor,
   });
 }
