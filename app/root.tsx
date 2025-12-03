@@ -9,7 +9,10 @@ import {
 } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "Alliance Manager" }];
+  return {
+    title: "Alliance Manager",
+    description: "Manage alliances and snapshots",
+  };
 };
 
 export const links: LinksFunction = () => ([
