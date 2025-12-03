@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Toast } from "bootstrap";
 import AllianceForm from "./AllianceForm";
 import AllianceTable from "./AllianceTable";
 import { addAlliance, updateAllianceShade } from "../services/alliances.server";
@@ -24,7 +25,7 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
     setToastType(type);
     const toastEl = document.getElementById("statusToast");
     if (toastEl) {
-      const bsToast = new window.bootstrap.Toast(toastEl);
+      const bsToast = new Toast(toastEl);
       bsToast.show();
     }
   };
@@ -71,9 +72,9 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
           <div className="card-body">
             <h2 className="h5">Add New Alliance</h2>
             <AllianceForm
-  onSubmit={handleAddAlliance}
-  existingNames={alliances.map((a) => a.name.toLowerCase())}
-/>
+              onSubmit={handleAddAlliance}
+              existingNames={alliances.map((a) => a.name.toLowerCase())}
+            />
           </div>
         </div>
       )}

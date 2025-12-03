@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Modal } from "bootstrap";
 
 type Alliance = { id: string; name: string; shades: string[] };
 
@@ -31,9 +32,9 @@ export default function AllianceTable({
     setSelectedIndex(index);
     setNewColor(shade);
     setError(null);
-    const modal = document.getElementById("shadeModal");
-    if (modal) {
-      const bsModal = new window.bootstrap.Modal(modal);
+    const modalEl = document.getElementById("shadeModal");
+    if (modalEl) {
+      const bsModal = new Modal(modalEl);
       bsModal.show();
     }
   };
@@ -46,9 +47,9 @@ export default function AllianceTable({
     if (selectedAlliance && selectedIndex !== null) {
       onEditShade(selectedAlliance.id, selectedIndex, newColor);
     }
-    const modal = document.getElementById("shadeModal");
-    if (modal) {
-      const bsModal = window.bootstrap.Modal.getInstance(modal);
+    const modalEl = document.getElementById("shadeModal");
+    if (modalEl) {
+      const bsModal = Modal.getInstance(modalEl);
       bsModal?.hide();
     }
   };
