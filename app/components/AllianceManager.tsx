@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AllianceForm from "./AllianceForm";
 import AllianceTable from "./AllianceTable";
-import { addAlliance, updateAllianceShade } from "../services/alliances.server";
+import { addAlliance, updateAllianceShade, deleteAlliance } from "../services/alliances.server";
 import { subscribeAlliances } from "../services/alliances.client";
 import type { Alliance } from "../services/alliances.server";
 
@@ -20,7 +20,7 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
   }, []);
 
   const showToast = async (message: string, type: "success" | "error" | "info" = "info") => {
-    if (typeof window === "undefined") return; // SSR guard
+    if (typeof window === "undefined") return;
     setToastMessage(message);
     setToastType(type);
     const toastEl = document.getElementById("statusToast");
@@ -42,14 +42,25 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
     }
   };
 
-  const handleEditShade = async (id: string, index: number, newColor: string) => {
+  const handleUpdateShade = async (id: string, shadeKey: string, newColor: string) => {
     try {
       if (!readOnly) {
-        await updateAllianceShade(id, index, newColor);
+        await updateAllianceShade(id, shadeKey, newColor);
         showToast("Shade updated successfully.", "success");
       }
     } catch {
       showToast("Error updating shade.", "error");
+    }
+  };
+
+  const handleDeleteAlliance = async (id: string) => {
+    try {
+      if (!readOnly) {
+        await deleteAlliance(id);
+        showToast("Alliance deleted successfully.", "success");
+      }
+    } catch {
+      showToast("Error deleting alliance.", "error");
     }
   };
 
@@ -65,7 +76,7 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
         </span>
       </div>
       <p className="text-muted">
-        Manage alliances and their symbolic shades. All changes are saved automatically.
+        Manage your alliance network and color schemes. All changes are saved automatically.
       </p>
 
       {!readOnly && (
@@ -86,7 +97,11 @@ export default function AllianceManager({ readOnly = false }: { readOnly?: boole
           <p className="mt-3">Loading alliances…</p>
         </div>
       ) : (
-        <AllianceTable alliances={alliances} onEditShade={handleEditShade} readOnly={readOnly} />
+        <AllianceTable
+          alliances={alliances}
+          onUpdateShade={handleUpdateShade}
+          onDeleteAlliance={handleDeleteAlliance}
+        />
       )}
 
       {/* Toast container */}
