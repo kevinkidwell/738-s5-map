@@ -7,15 +7,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  NavLink,
 } from "@remix-run/react";
 
 import bootstrapCss from "bootstrap/dist/css/bootstrap.min.css";
 import customCss from "./styles/custom.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export const meta: MetaFunction = () => ({
   title: "Alliance Manager",
-  description: "Manage alliances, maps, and snapshots",
+  description: "Manage alliances, maps, calculations, and dates",
 });
 
 export const links: LinksFunction = () => [
@@ -31,44 +31,32 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <nav className="nav nav-tabs mb-3 px-3">
-          <NavLink
-            to="/map"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active" : ""}`
-            }
-          >
-            Map
-          </NavLink>
-          <NavLink
-            to="/alliances"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active" : ""}`
-            }
-          >
-            Alliances
-          </NavLink>
-          <NavLink
-            to="/public/map"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active" : ""}`
-            }
-          >
-            Public Map
-          </NavLink>
-          <NavLink
-            to="/public/alliances"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active" : ""}`
-            }
-          >
-            Public Alliances
-          </NavLink>
-        </nav>
+        {/* Global layout wrapper */}
+        <div className="d-flex">
+          {/* Sidebar */}
+          <nav className="bg-light border-end vh-100 p-3" style={{ width: "240px" }}>
+            <h2 className="h5 mb-4">Alliance Manager</h2>
+            <ul className="nav flex-column">
+              <li className="nav-item mb-2">
+                <a className="nav-link fw-semibold" href="/map">Map</a>
+              </li>
+              <li className="nav-item mb-2">
+                <a className="nav-link fw-semibold" href="/alliances">Alliances</a>
+              </li>
+              <li className="nav-item mb-2">
+                <a className="nav-link fw-semibold" href="/calculations">Calculations</a>
+              </li>
+              <li className="nav-item mb-2">
+                <a className="nav-link fw-semibold" href="/dates">Dates</a>
+              </li>
+            </ul>
+          </nav>
 
-        <main className="container-fluid">
-          <Outlet />
-        </main>
+          {/* Main content */}
+          <main className="flex-grow-1 p-4 bg-white">
+            <Outlet />
+          </main>
+        </div>
 
         <ScrollRestoration />
         <Scripts />

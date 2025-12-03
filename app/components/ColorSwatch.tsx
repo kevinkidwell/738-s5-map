@@ -43,8 +43,7 @@ export default function ColorSwatch({
           display: "inline-flex",
         }}
         aria-label={`${label} ${color}`}
-      >
-        {color}
+      >        {color}
       </span>
       <input
         type="color"
@@ -57,3 +56,4 @@ export default function ColorSwatch({
     </div>
   );
 }
+

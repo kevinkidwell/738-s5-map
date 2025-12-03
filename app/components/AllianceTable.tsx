@@ -12,15 +12,15 @@ export default function AllianceTable({
 }) {
   return (
     <div className="table-responsive">
-      <table className="table table-hover align-middle">
-        <thead className="table-light">
-          <tr className="text-uppercase small">
-            <th scope="col">Alliance name</th>
-            <th scope="col">Base color</th>
-            <th scope="col">Light shade</th>
-            <th scope="col">Medium shade</th>
-            <th scope="col">Dark shade</th>
-            <th scope="col">Actions</th>
+      <table className="table table-hover align-middle rounded overflow-hidden border">
+        <thead className="table-light text-uppercase small">
+          <tr>
+            <th>Alliance Name</th>
+            <th>Base Color</th>
+            <th>Light Shade</th>
+            <th>Medium Shade</th>
+            <th>Dark Shade</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,7 +34,9 @@ export default function AllianceTable({
           ))}
           {alliances.length === 0 && (
             <tr>
-              <td colSpan={6} className="text-muted text-center">No alliances yet.</td>
+              <td colSpan={6} className="text-muted text-center">
+                No alliances yet.
+              </td>
             </tr>
           )}
         </tbody>

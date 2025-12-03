@@ -43,10 +43,19 @@ export default function AllianceRow({
       </td>
       <td>
         <div className="d-flex">
-          <button className="btn btn-sm btn-outline-secondary me-2" title="Edit Alliance" aria-label={`Edit ${alliance.name}`}>
+          <button
+            className="btn btn-sm btn-outline-secondary me-2"
+            title="Edit Alliance"
+            aria-label={`Edit ${alliance.name}`}
+          >
             <i className="bi bi-pencil"></i>
           </button>
-          <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(alliance.id)} title="Delete Alliance" aria-label={`Delete ${alliance.name}`}>
+          <button
+            className="btn btn-sm btn-outline-danger"
+            onClick={() => onDelete(alliance.id)}
+            title="Delete Alliance"
+            aria-label={`Delete ${alliance.name}`}
+          >
             <i className="bi bi-trash"></i>
           </button>
         </div>
