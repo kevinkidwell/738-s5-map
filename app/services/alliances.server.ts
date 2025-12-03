@@ -5,6 +5,7 @@ import {
   doc,
   updateDoc,
   addDoc,
+  deleteDoc
 } from "firebase/firestore";
 
 export type Alliance = {
@@ -41,4 +42,15 @@ export async function updateAllianceShade(
 ) {
   const ref = doc(db, "alliances", id);
   await updateDoc(ref, { [`shades.${index}`]: newColor });
+}
+
+export async function deleteAlliance(id: string) {
+  try {
+    const ref = doc(db, "alliances", id);
+    await deleteDoc(ref);
+    return true;
+  } catch (error) {
+    console.error("Error deleting alliance:", error);
+    throw error;
+  }
 }
