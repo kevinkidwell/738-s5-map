@@ -1,8 +1,8 @@
 // app/routes/alliances.tsx
 import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
-import { getAlliances } from "~/services/alliances.server";
-import AllianceManager from "~/components/AllianceManager";
+import { getAlliances } from "../services/alliances.server";
+import AllianceManager from "../components/AllianceManager";
 
 export const loader: LoaderFunction = async () => {
   try {
